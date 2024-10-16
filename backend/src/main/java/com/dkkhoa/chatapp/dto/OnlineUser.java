@@ -1,16 +1,15 @@
 package com.dkkhoa.chatapp.dto;
 
-public class UserSessionDTO {
+public class OnlineUser {
     private int id;
-    private String email;
     private String username;
     private String avatarColor;
 
-    public UserSessionDTO() {}
+    public OnlineUser() {
+    }
 
-    public UserSessionDTO(int id, String email, String username, String avatarColor) {
+    public OnlineUser(int id, String username, String avatarColor) {
         this.id = id;
-        this.email = email;
         this.username = username;
         this.avatarColor = avatarColor;
     }
@@ -21,14 +20,6 @@ public class UserSessionDTO {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getUsername() {
@@ -47,12 +38,10 @@ public class UserSessionDTO {
         this.avatarColor = avatarColor;
     }
 
-
     @Override
     public String toString() {
-        return "{" +
+        return "OnlineUser{" +
                 "id: " + id +
-                ", email: " + email +
                 ", username: " + username +
                 ", avatarColor: " + avatarColor +
                 '}';

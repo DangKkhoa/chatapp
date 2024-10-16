@@ -1,7 +1,9 @@
 package com.dkkhoa.chatapp.controller;
 
 
+import com.dkkhoa.chatapp.dto.OnlineUser;
 import com.dkkhoa.chatapp.model.Message;
+import com.dkkhoa.chatapp.model.Status;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,31 +24,36 @@ public class ChatController {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    private Set<String> onlineUsers = new HashSet<>();
+    private Set<OnlineUser> onlineUsers = new HashSet<>();
 
 
 
     @MessageMapping("/message")
     @SendTo("/chatroom/public")
     public Message recievePublicMessage(@Payload Message message) {
+
         System.out.println(message);
         return message;
     }
 
-//    @MessageMapping("/join")
-//    @SendTo("/topic/online-users")
-//    public Message userJoin(@Payload  Message message) {
-//        onlineUsers.add(message.getSenderName());
-//        simpMessagingTemplate.convertAndSend("/topic/online-users", onlineUsers);
-//
-//        Message joinMessage = new Message();
-//        joinMessage.setSenderName("System");
-//        joinMessage.setMessage(message.getSenderName() + " has joined the conversation.");
-//        joinMessage.setStatus(Status.JOIN);
-//        simpMessagingTemplate.convertAndSend("/chatroom/public", joinMessage);
-//        System.out.println(onlineUsers);
-//        return message;
-//    }
+    @MessageMapping("/join")
+    @SendTo("/topic/online-users")
+    public Set<OnlineUser> userJoin(@Payload  Message message) {
+        System.out.println(message);
+        boolean onlineUserExist = onlineUsers.stream().anyMatch(user -> user.getId() == message.getSenderId());
+        if(!onlineUserExist) {
+            onlineUsers.add(new OnlineUser(message.getSenderId(), message.getSenderName(), message.getSenderAvatarColor()));
+            simpMessagingTemplate.convertAndSend("/topic/online-users", onlineUsers);
+
+            Message joinMessage = new Message();
+            joinMessage.setSenderName("System");
+            joinMessage.setMessage(message.getSenderName() + " has joined the conversation.");
+            joinMessage.setStatus(Status.JOIN);
+            simpMessagingTemplate.convertAndSend("/chatroom/public", joinMessage);
+        }
+        System.out.println(onlineUsers);
+        return onlineUsers;
+    }
 
     @MessageMapping("/private-message")
     public Message recievePrivateMessage(@Payload Message message) {

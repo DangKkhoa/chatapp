@@ -5,11 +5,18 @@ import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 
 const Register = () => {
+    const backgroundColors = [
+        "#fcba03", "#16f296", "#bce640",
+        "#68cdf2", "#e386d0", "#e38699"
+    ];
+
+    const avatarColor = backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
     const [userData, setUserData] = useState({
         email: "",
         username: "",
         password: "",
-        confirmedPassword: ""
+        confirmedPassword: "",
+        avatarColor: avatarColor,
     })
     const [error, setError] = useState("");
     const handleSubmit = async (event) => {
@@ -29,7 +36,12 @@ const Register = () => {
 
     const handleValueChange = (event) => {
         const { name, value } = event.target;
-        setUserData({...userData, [name]: value});
+        if(name == "email") {
+            setUserData({...userData,[name]: value, username: value.split('@')[0]});
+        }
+        else {
+            setUserData({...userData, [name]: value});
+        }
     }
     return(
         <div className="container register" >

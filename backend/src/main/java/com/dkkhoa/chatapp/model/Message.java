@@ -10,7 +10,9 @@ import lombok.ToString;
 @Data
 @ToString
 public class Message {
+    private int senderId;
     private String senderName;
+    private String senderAvatarColor;
     private String receiverName;
     private String message;
     private String time;

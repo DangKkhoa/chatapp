@@ -59,6 +59,7 @@ public class AuthController {
             newUser.setEmail(user.getEmail());
             newUser.setUsername(user.getUsername());
             newUser.setPassword(user.getPassword());
+            newUser.setAvatarColor(user.getAvatarColor());
             User userToBeSaved = userService.registerUser(newUser);
             if(userToBeSaved == null) {
                 return new CustomResponse(5, "Something went wrong");
@@ -86,9 +87,49 @@ public class AuthController {
 //                            userFound.getAvatarUrl()
 //                    )
 //            );
-            return new CustomResponse(1, "{id: " + userFound.getId() + ", username: " + userFound.getUsername() + "}");
+            JwtUtil jwtUtil = new JwtUtil();
+            String token = jwtUtil.generateToken(userFound);
+
+            UserSessionDTO userSessionDTO = new UserSessionDTO();
+            userSessionDTO.setId(userFound.getId());
+            userSessionDTO.setEmail(userFound.getEmail());
+            userSessionDTO.setUsername(userFound.getUsername());
+            userSessionDTO.setAvatarColor(userFound.getAvatarColor());
+            return new CustomResponse(1, token, userSessionDTO);
         }
         return new CustomResponse(4, "Wrong username or password");
+    }
+
+    @GetMapping("/jwt-verify")
+    @ResponseBody
+    public CustomResponse verifyToken(HttpServletRequest request) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            System.out.println(authHeader);
+            if(authHeader == null || !authHeader.startsWith("Bearer")) {
+                return new CustomResponse(11, "No authorization header");
+            }
+
+            String token = authHeader.substring(7);
+            JwtUtil jwtUtil = new JwtUtil();
+            String email = jwtUtil.extractEmail(token);
+            if(email == null || jwtUtil.isTokenExpired(token)) {
+                return new CustomResponse(11, "Invalid token");
+            }
+            System.out.println("Line 27");
+            User user = userService.getUserByEmail(email);
+
+            UserSessionDTO userSessionDTO = new UserSessionDTO();
+            userSessionDTO.setId(user.getId());
+            userSessionDTO.setEmail(user.getEmail());
+            userSessionDTO.setUsername(user.getUsername());
+            userSessionDTO.setAvatarColor(user.getAvatarColor());
+            return new CustomResponse(10, token, userSessionDTO);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return new CustomResponse(11, "Something went wrong");
+        }
     }
 
     @GetMapping("/login")

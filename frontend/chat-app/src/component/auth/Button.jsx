@@ -8,35 +8,53 @@ const Button = (props) => {
     const [error, setError] = useState();
     const navigate = useNavigate();
 
+    
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         // console.log(userData);
-
-        const response = await axios.post(`http://localhost:8080/auth/${props.type}`, props.loginUserData);
-        const responseData = response.data;
-        if(responseData.code != 1) {
+        try {
+            const response = await axios.post(`http://localhost:8080/auth/${props.type}`, props.userData);
+            const responseData = response.data;
             console.log(responseData);
-            setError(responseData.message);
-        }
-        else {
-            if(props.type == "login") {
-                localStorage.setItem("jwtToken", responseData.message);
-                console.log(JSON.parse(responseData.message.replace(/(\w+):/g, '"$1":')));
-                // navigate("/")
+            console.log(responseData.userSessionDTO);
+            if(responseData.code != 1) {
+                console.log(responseData);
+                setError(responseData.message);
             }
             else {
-                navigate("/auth/login");
+                if(props.type == "login") {
+                    if(props.isRememberLoginChecked) {
+                        localStorage.setItem("jwtToken", responseData.message);
+                        localStorage.setItem("user", JSON.stringify(responseData.userSessionDTO));
+                    }
+                    else {
+                        sessionStorage.setItem("jwtToken", responseData.message);
+                        sessionStorage.setItem("user", JSON.stringify(responseData.userSessionDTO));
+                    }
+                    
+                    
+                    navigate("/")
+                }
+                else {
+                    navigate("/auth/login");
+                }
+                
             }
+        }
+        catch(error) {
+            console.error(error);
+            console.log("Internal server error");
             
         }
         
+        
     }
-    
-    
+
     return(
         <>
             <ErrorBox message={error}/>
-            <button type="submit" className="submit-btn" onClick={handleSubmit}>{props.type == "login" ? "Login" : "Register"}</button>
+            <button type="submit" className={`btn ${props.type === "login" ? "submit-btn" : "register-btn"}`} onClick={handleSubmit}>{props.type == "login" ? "Login" : "Register"}</button>
         </>
     );
 

@@ -2,6 +2,8 @@ body {
     padding: 0;
     margin: 0;
     background-color: #f2f4f7;
+    font-family: "Ubuntu", sans-serif;
+
 }
 
 .container {
@@ -62,6 +64,23 @@ form {
     margin-bottom: 15px;
 
 }
+
+.form-group.password {
+    position: relative;
+}
+
+.form-group.password .toggle-password{
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    /* bottom: 50%; */
+    transform: translateY(-50%);
+    display: none;
+}
+
+.form-group.password .toggle-password.visible {
+    display: block;
+}
 label {
     margin-bottom: 5px;
 }
@@ -82,17 +101,10 @@ input:focus {
     border: 1px solid #0866ff;
 }
 
-/* .error-message {
-    display: none;
-    background-color: #FFEBE9;
-    text-align: center;
-    border: 1px solid red;
-    padding: 15px;
-    margin: 10px 0 0 0;
-    max-width: 100%;
-    font-size: 1rem;
-    border-radius: 5px;
-} */
+
+.remember-login {
+    align-self: flex-start;
+}
 
 .btn {
     padding: 15px 10px;
@@ -104,13 +116,8 @@ input:focus {
 
 .submit-btn {
     width: 100%;
-    padding: 15px 10px;
     margin: 10px 0;
     background-color: #0866ff;
-    border: none;
-    color: white;
-    border-radius: 5px;
-    font-size: 1rem;
 }
 
 .submit-btn:hover {

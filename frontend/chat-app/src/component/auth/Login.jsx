@@ -4,11 +4,18 @@ import "../../style/auth.css"
 import axios from "axios";
 import Button from "./Button";
 
+
 const Login = () => {
-    const [loginUserData, setLoginUserData] = useState({
+    
+    const [userData, setUserData] = useState({
         email: "",
-        password: ""
+        password: "", 
+        
     })
+    const [isChecked, setIsChecked] = useState(false);
+    const [passwordVisible, setPasswordVisible] = useState(false) 
+    const [isFocus, setIsFocus] = useState(false);
+
     // const handleSubmit = async (event) => {
     //     event.preventDefault();
     //     console.log(userData);
@@ -20,8 +27,22 @@ const Login = () => {
 
     const handleValueChange = (event) => {
         const { name, value } = event.target;
-        setLoginUserData({...loginUserData, [name]: value});
+        setUserData({...userData, [name]: value});
     }
+
+    const handleCheckboxChange = (event) => {
+        setIsChecked(event.target.checked);
+    }
+
+    const toggleViewPassword = () => {
+        if(passwordVisible) {
+            setPasswordVisible(false);
+        }
+        else {
+            setPasswordVisible(true);
+        }
+    }
+
     return(
         <div className="container login" >
             <div id="logo" className="login">
@@ -31,30 +52,40 @@ const Login = () => {
         </div>
             <form id="login-form" action="">
                 <div className="form-group">
-                    <label htmlFor="email">Email</label><br/>
                     <input 
                         type="email" 
                         name="email" 
                         className="form-input"
                         id="email"
                         placeholder="Enter your email address"
-                        value={loginUserData.email}
+                        value={userData.email}
                         onChange={handleValueChange}/>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="">Password:</label><br/>
+                <div className="form-group password">
                     <input 
-                        type="password" 
+                        type={passwordVisible ? "text" : "password"} 
                         name="password" 
                         className="form-input"
                         id="password"
                         placeholder="Enter your password"
-                        value={loginUserData.password}
-                        onChange={handleValueChange}/>
+                        value={userData.password}
+                        onChange={handleValueChange}
+                        
+                        />
+                    <div onClick={toggleViewPassword} className={`toggle-password ${userData.password && "visible"}`}>
+                        {passwordVisible ? <i class="fa-solid fa-eye-slash"></i> : <i class="fa-solid fa-eye"></i>}
+                    </div>
                 </div>
-
-                <Button type="login" loginUserData={loginUserData} />
+                <div className="remember-login">
+                    <input 
+                        type="checkbox" 
+                        checked={isChecked}
+                        onChange={handleCheckboxChange}
+                        />
+                    Remember Login
+                </div>
+                <Button type="login" userData={userData} isRememberLoginChecked={isChecked}/>
                 <a href="/forgot-password" className="reset-password-link">Forgot password ?</a>
                 <hr/>
                 <a href="/auth/register" id="register-btn" className="btn register-btn">Create new account</a>
