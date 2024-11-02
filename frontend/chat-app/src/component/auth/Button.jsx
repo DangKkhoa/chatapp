@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import "../../style/auth.css";
-import { useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
 import ErrorBox from "./ErrorBox";
 
 const Button = (props) => {
@@ -34,10 +34,10 @@ const Button = (props) => {
                     }
                     
                     
-                    navigate("/")
+                    navigate("/", { replace: true });
                 }
                 else {
-                    navigate("/auth/login");
+                    navigate("/auth/login", { replace: true });
                 }
                 
             }

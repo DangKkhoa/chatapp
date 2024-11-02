@@ -8,8 +8,20 @@ import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
+  useParams,
 } from "react-router-dom";
 import PrivateChats from "./component/chat/PrivateChats";
+
+const ProtectedChatroom = () => {
+  const { type, id } = useParams();
+
+  if(!id || type != "public" && type != "private") {
+    console.log(id);
+    return <Navigate to="/chat" replace/>
+  }
+
+  return <Chatroom />
+}
 
 const router = createBrowserRouter([
   
@@ -27,12 +39,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/chat",
-    element: <Chatroom/>
+    element: <Chatroom />
   },
   {
-    path: "/chat/private/:id",
-    element: <PrivateChats />
-  }
+    path: "/chat/:type/:id",
+    element: <Chatroom />
+  },
 
 ]);
 

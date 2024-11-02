@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import "../../style/auth.css"
 import axios from "axios";
 import Button from "./Button";
-
+import chatLogo from "../../assets/chat.png";
 
 const Login = () => {
     
@@ -14,16 +14,6 @@ const Login = () => {
     })
     const [isChecked, setIsChecked] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false) 
-    const [isFocus, setIsFocus] = useState(false);
-
-    // const handleSubmit = async (event) => {
-    //     event.preventDefault();
-    //     console.log(userData);
-
-    //     const response = await axios.post("http://localhost:8080/api/auth/v1/login", userData)
-            
-    //     console.log(response);
-    // }
 
     const handleValueChange = (event) => {
         const { name, value } = event.target;
@@ -45,11 +35,10 @@ const Login = () => {
 
     return(
         <div className="container login" >
-            <div id="logo" className="login">
-            <h1 className="title">Messenger Clone</h1>
-            <p className="sub-title">Connect and send message to everyone.</p>
-
-        </div>
+            <div id="logo" className="">
+                <h1 className="title">QuickChat</h1>
+                <p className="sub-title">Connect and send messages to everyone with superior speed <span style={{color: "#f5c938"}}><i class="fa-solid fa-bolt"></i></span></p>
+            </div>
             <form id="login-form" action="">
                 <div className="form-group">
                     <input 
@@ -74,7 +63,7 @@ const Login = () => {
                         
                         />
                     <div onClick={toggleViewPassword} className={`toggle-password ${userData.password && "visible"}`}>
-                        {passwordVisible ? <i class="fa-solid fa-eye-slash"></i> : <i class="fa-solid fa-eye"></i>}
+                        {passwordVisible ? <i className="fa-solid fa-eye-slash"></i> : <i className="fa-solid fa-eye"></i>}
                     </div>
                 </div>
                 <div className="remember-login">

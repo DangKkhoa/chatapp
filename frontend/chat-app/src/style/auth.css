@@ -1,9 +1,19 @@
+* {
+    font-family: "DM Sans", sans-serif;
+}
+
 body {
     padding: 0;
     margin: 0;
     background-color: #f2f4f7;
-    font-family: "Ubuntu", sans-serif;
+    
 
+}
+
+@media screen and (max-width: 1048px) {
+    .container {
+        width: 50px;
+    }
 }
 
 .container {
@@ -26,9 +36,10 @@ body {
     justify-content: center;
 }
 
-#logo.login {
+#logo {
     flex: 3;
 }
+
 
 #logo .title {
     color: #0866ff;
@@ -73,7 +84,6 @@ form {
     position: absolute;
     right: 5px;
     top: 50%;
-    /* bottom: 50%; */
     transform: translateY(-50%);
     display: none;
 }
@@ -88,6 +98,7 @@ label {
 input[type="text"],
 input[type="password"],
 input[type="email"] {
+    font-family: "DM Sans", sans-serif;
     width: 100%;
     padding: 12px 10px;
     border: 1px solid #c1c1c1;
