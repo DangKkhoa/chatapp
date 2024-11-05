@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import ChatAcceptPending from "./ChatAcceptPending";
+import InputField from "./InputField";
 
 const PrivateChats = ({ 
         id, privateChats, userData, splitIntoLines, 
-        onlineUsers, messageEndRef, emojiPickerVisible, emojiPickerClick, 
-        onEmojiClick, sendPrivateMessage, handleValue, EmojiPicker,
-        receiverData, systemMessage, accepted, deletedMessage,
-        isDeleted }) => {
+        onlineUsers, messageEndRef, sendPrivateMessage,
+        receiverData, accepted, deletedMessage,
+        isDeleted, setUserData }) => {
         
     const [status, setStatus] = useState();
 
@@ -33,7 +33,7 @@ const PrivateChats = ({
                 </div>
             </div>
             <ul className="chat-messages" ref={messageEndRef}>
-                
+                {console.log(privateChats)}
                 {isDeleted && <h1>{deletedMessage}</h1>}
                 {privateChats.get(`${id}`)  && (privateChats.get(`${id}`).map((chat, index) => (
                     <li className="message"  key={index+1}>
@@ -58,26 +58,18 @@ const PrivateChats = ({
             
         
             {/* {accepted.has(userData.id) && console.log(accepted)} */}
-            {accepted ? <div className="send-message">
+            {accepted ? <div className="send-message-container">
             
-                {emojiPickerVisible && <EmojiPicker className="emoji-picker" onEmojiClick={onEmojiClick}/>}
-                <button className="emoji-toggle" onClick={emojiPickerClick}><i className="fa-regular fa-face-smile " ></i></button>
-                <input 
-                    type="text" 
-                    className="input-message" 
-                    name="message"
-                    placeholder={`Message...`} 
-                    value={userData.message}
-                    onChange={handleValue}/>
-                
-                <button type='button' className='send-button' onClick={sendPrivateMessage} style={{color: userData.avatarColor}}>
-                    {userData.message && <i className="fa-solid fa-paper-plane"></i>}
-                    {!userData.message && <i className="fa-regular fa-heart"></i>}
-                </button>
+                <InputField 
+                    sendFunction={sendPrivateMessage}
+                    userData={userData}
+                    setUserData={setUserData}
+                                
+                />
                 
             </div>
             :
-            <ChatAcceptPending isDeleted={isDeleted} />
+            <ChatAcceptPending isDeleted={isDeleted} receiverName={receiverData.username}/>
             }
         </>
     );

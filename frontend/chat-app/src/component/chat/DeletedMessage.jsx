@@ -2,7 +2,7 @@
 const DeletedMessage = () => {
     return(
         <div>
-            <button>Go back to home</button>
+            <a href="/chat">Go back to home</a>
         </div>
     )
 }

@@ -37,7 +37,7 @@ const Login = () => {
         <div className="container login" >
             <div id="logo" className="">
                 <h1 className="title">QuickChat</h1>
-                <p className="sub-title">Connect and send messages to everyone with superior speed <span style={{color: "#f5c938"}}><i class="fa-solid fa-bolt"></i></span></p>
+                <p className="sub-title">Connect and send messages to everyone with superior speed <span style={{color: "#f5c938"}}><i className="fa-solid fa-bolt"></i></span></p>
             </div>
             <form id="login-form" action="">
                 <div className="form-group">

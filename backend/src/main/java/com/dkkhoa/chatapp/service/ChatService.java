@@ -56,6 +56,7 @@ public class ChatService {
     }
 
     public Message storePrivateMessage(Message message) {
+
         String chatroomId = generatePrivateChatroom(message.getSenderId(), message.getReceiverId());
         System.out.println("chatroomId: " + chatroomId);
         Chatroom privateChatroom = chatRepository.findByChatroomId(chatroomId);

@@ -39,19 +39,21 @@ public class ChatController {
     private UserService userService;
 
     private Set<OnlineUser> onlineUsers = new HashSet<>();
+
     @Autowired
     private JwtUtil jwtUtil;
 
+    int MESSAGE_MAX_LENGTH = 250;
 
     @MessageMapping("/message")
     @SendTo("/chatroom/public")
     public Message recievePublicMessage(@Payload MessageDTO messageDTO) {
         try {
             String email = jwtUtil.extractUsername(messageDTO.getToken());
-
             if(email == null || jwtUtil.isTokenExpired(messageDTO.getToken())) {
                 return null;
             }
+
             Message message = MessageMapper.toEntity(messageDTO);
             chatService.storePublicMessage(message);
             System.out.println(message);
@@ -68,7 +70,7 @@ public class ChatController {
 
     @PostMapping("/chat/history")
     @ResponseBody
-    public List<Message> sendHistoryMessages() {
+    public List<Message> getHistoryMessages() {
         try {
 //            String token = request.getHeader("Authorization").substring(7); // Assuming Bearer token format
 //
@@ -86,12 +88,12 @@ public class ChatController {
 
     @MessageMapping("/join/public")
     @SendTo("/topic/online-users")
-    public Set<OnlineUser> userJoin(@Payload  Message message) {
+    public Set<OnlineUser> userJoin(@Payload Message message) {
         System.out.println(message);
         boolean onlineUserExist = onlineUsers.stream().anyMatch(user -> user.getId() == message.getSenderId());
         if(!onlineUserExist) {
             onlineUsers.add(new OnlineUser(message.getSenderId(), message.getSenderName(), message.getSenderAvatarColor()));
-            simpMessagingTemplate.convertAndSend("/topic/online-users", onlineUsers);
+//            simpMessagingTemplate.convertAndSend("/topic/online-users", onlineUsers);
 
             Message joinMessage = new Message();
             joinMessage.setSenderName("System");
@@ -103,13 +105,20 @@ public class ChatController {
         return onlineUsers;
     }
 
+    @MessageMapping("/disconnect/public")
+    @SendTo("/topic/online-users")
+    public Set<OnlineUser> userDisconnect(@Payload Message message) {
+        onlineUsers.removeIf(user -> user.getId() == message.getSenderId());
+        return onlineUsers;
+    }
+
     @MessageMapping("/join/private")
 //    @SendTo("/topic/chat-availability")
     public void userJoinPrivate(@Payload Message message) {
         System.out.println("Chat controller 110");
         System.out.println(message);
          ChatStatusResponse chatroomAvailability = chatService.isAcceptedByReceiver(message);
-        // System.out.println("Chatroom available: " + chatroomAvailable);
+//         System.out.println("Chatroom available: " + chatroomAvailable);
         simpMessagingTemplate.convertAndSendToUser(Integer.toString(message.getSenderId()), "/chat-availability", chatroomAvailability.isAvailable());
         //chatService.isAcceptedByReceiver(message.getSenderId(), message.getReceiverId());
 
@@ -134,7 +143,7 @@ public class ChatController {
             ChatStatusResponse chatroomAvailability = chatService.isAcceptedByReceiver(message);
             System.out.println("Code: " + chatroomAvailability.getCode());
             if(chatroomAvailability.getCode() == 1 || chatroomAvailability.getCode() == 3) {
-                simpMessagingTemplate.convertAndSendToUser(Integer.toString(message.getSenderId()), "/chat-availability", chatroomAvailability.isAvailable());
+                    simpMessagingTemplate.convertAndSendToUser(Integer.toString(message.getSenderId()), "/chat-availability", chatroomAvailability.isAvailable());
             }
             else {
                 simpMessagingTemplate.convertAndSendToUser(Integer.toString(message.getReceiverId()), "/chat-availability", chatroomAvailability.isAvailable());
@@ -194,14 +203,27 @@ public class ChatController {
 //        // return chatService.isAcceptedByReceiver(requestDTO.getSenderId(), requestDTO.getReceiverId());
 //    }
 
-    @MessageMapping("/private-chat/delete")
-    public void deleteMessage(@Payload Chatroom chatroom) {
+    @DeleteMapping("/private-chat/delete")
+    @ResponseBody
+    public CustomResponse deleteMessage(@RequestBody Chatroom chatroom) {
         System.out.println(199);
         System.out.println(chatroom.getUser1()  + " - " + chatroom.getUser2());
         boolean isDeleted = chatService.deleteChatroom(chatroom.getUser1(), chatroom.getUser2());
         if(isDeleted) {
             //simpMessagingTemplate.convertAndSend("/topic/delete/" + chatroom.getUser1(), chatroom.getUser2());
-            simpMessagingTemplate.convertAndSend("/topic/delete/" + chatroom.getUser2(), chatroom.getUser1());
+            // simpMessagingTemplate.convertAndSend("/topic/delete/" + chatroom.getUser2(), chatroom.getUser1());
+            return new CustomResponse(1, "Chat deleted successfully.");
         }
+
+        return new CustomResponse(2, "Unable to delete chat");
+    }
+
+    @MessageMapping("/private-chat/delete")
+    public void sendDeleteSignalToUser(@Payload Chatroom chatroom) {
+        CustomResponse response = deleteMessage(chatroom);
+        // simpMessagingTemplate.convertAndSend("/topic/delete/" + chatroom.getUser1(), chatroom.getUser2());
+         simpMessagingTemplate.convertAndSend("/topic/delete/" + chatroom.getUser2(), chatroom.getUser1());
+
+
     }
 }

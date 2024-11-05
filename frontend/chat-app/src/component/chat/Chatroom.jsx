@@ -1,11 +1,13 @@
 import axios from "axios"
 import { useEffect, useState, useRef } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { replace, useNavigate, useParams } from "react-router-dom"
 import sockjs from "sockjs-client/dist/sockjs"
 import Stomp, { over } from 'stompjs';
 import EmojiPicker from "emoji-picker-react";
 import PrivateChats from "./PrivateChats.jsx";
 import "../../style/home.css";
+import InputField from "./InputField.jsx";
+import OnlineUsers from "./OnlineUsers.jsx";
 const Chatroom = () => {
     const token = sessionStorage.getItem("jwtToken") || localStorage.getItem("jwtToken");
     const { type, id } = useParams();
@@ -42,6 +44,7 @@ const Chatroom = () => {
     
     useEffect(() => {
         verifyToken(token, id);
+        
     }, [type, userData.id, id])
 
 
@@ -89,7 +92,7 @@ const Chatroom = () => {
             register();
         }
         
-    }, [userData.id, id, type])
+    }, [userData.id])
 
     useEffect(() => {
         messageEndRef.current?.lastElementChild?.scrollIntoView({ behavior: "smooth" }); // Auto-scroll to the bottom
@@ -118,7 +121,8 @@ const Chatroom = () => {
         const privateChatHistory = historyResponse.data;
         privateChats.set(`${receiverId}`, privateChatHistory);
         privateChats.set(`${senderId}`, privateChatHistory);
-        setPrivateChats(prev => new Map(prev.set(`${receiverId}`, privateChatHistory)));
+        setPrivateChats(new Map(privateChats));
+        
     }
 
 
@@ -174,10 +178,11 @@ const Chatroom = () => {
         }
     }
 
+    
+
     useEffect(() => {
         if(stompClient.current) {
             stompClient.current.subscribe(`/user/${userData.id}/chat-availability`, onChatroomStatusReceived);
-            console.log(200);
         }
     }, [isNewMessage])
 
@@ -232,30 +237,26 @@ const Chatroom = () => {
     }
 
     const onPrivateMessageReceived = (payload) => {
+        // console.log(payload);
+        // return ;
         let payloadData = JSON.parse(payload.body);
-        console.log(payloadData);
-        // console.log(privateChats);
-        if(payloadData.senderId == 0) {
-            // privateChats.set(`${payloadData.senderid}`, payloadData);
-            
-            setPrivateChats(prev => new Map(prev.set(`${payloadData.senderId}`, payloadData)))
-            // setMessageDisabled(true);
-            return ;
-        }
-
-        if(privateChats.has(`${payloadData.senderId}`)) {
-            privateChats.get(`${payloadData.senderId}`).push(payloadData);
-            setPrivateChats(new Map(privateChats));
-        } 
-        else {
-            let list = [];
-            list.push(payloadData);
-            privateChats.set(`${payloadData.senderId}`, list);
-            setPrivateChats(privateChats);
-        }
+        console.log(isDeleted);
+        
+        setPrivateChats(prevMap => {
+            const newMap = new Map(prevMap);
+            let currentMessages = newMap.get(`${payloadData.senderId}`) || [];
+            currentMessages.push(payloadData);
+            newMap.set(`${payloadData.senderId}`, currentMessages);
+            return newMap;
+        })
+        // setPrivateChats(prevMap => new Map(prevMap.set(`${payloadData.senderId}`, [...prevMap.get(`${payloadData.senderId}`), payloadData])));
+        
+        
         setReceivedMessages(map => new Map(map.set(`${payloadData.senderId}`, payloadData.senderName)));
-        setIsNewMessage(prev => !prev);
-        setIsDeleted(true);
+        setIsNewMessage(true);
+        setAccepted(true);
+        setIsDeleted(false);
+
     }
 
     const onUsersJoinReceived = (payload) => {
@@ -273,30 +274,36 @@ const Chatroom = () => {
     const onPrivateMessageDeleted = (payload) => {
         console.log(payload.body);
         const idToDelete = payload.body
-        console.log(idToDelete);
-
-        console.log(receivedMessages);
-
         fetchSenderMessages(userData.id, token);
-
+        // privateChats.set(idToDelete, []);
+        // privateChats.set(`${userData.id}`, []);
+        // privateChats.clear();
         setPrivateChats(prevMap => {
             const newMap = new Map(prevMap);
             newMap.set(`${idToDelete}`, []);
+            newMap.set(`${userData.id}`, []);
             return newMap;
-        });
+        })
+        
+        // privateChats.set(`${idToDelete}`, []);
+        // privateChats.set(`${userData.id}`, [])
+        // // privateChats.clear();
+        // setPrivateChats(new Map(privateChats));
+
+        
         setDeletedMEssage("Message has been deleted");
         setIsDeleted(true);
         setAccepted(false);        
     }
 
-    const sendPublicMessage = () => {
+    const sendPublicMessage = (message) => {
         const token = sessionStorage.getItem("jwtToken") || localStorage.getItem("jwtToken");
         if(stompClient.current) {
             let chatMessage = {
                 senderId: userData.id,
                 senderName: userData.username,
                 senderAvatarColor: userData.avatarColor,
-                message: userData.message || "❤️",
+                message: message || "❤️",
                 status: 'MESSAGE',
                 token: token
             };
@@ -305,10 +312,12 @@ const Chatroom = () => {
         
         setUserData({...userData, message: ""});
         messageEndRef.current?.scrollIntoView({ behaviour: "smooth" });
+        
     }
 
-    const sendPrivateMessage = () => {
+    const sendPrivateMessage = (message) => {
         const token = sessionStorage.getItem("jwtToken") || localStorage.getItem("jwtToken");
+        console.log('Click');
         if(stompClient) {
             let chatMessage = {
                 senderId: `${userData.id}`,
@@ -316,47 +325,44 @@ const Chatroom = () => {
                 senderAvatarColor: userData.avatarColor,
                 receiverId: `${id}`,
                 receiverName: receiverData.username,
-                message: userData.message || "❤️",
+                message: message || "❤️",
                 // time: `${h}:${m}`,
                 status: "MESSAGE",
                 token: token
             }
             console.log(chatMessage);
             if(userData.id != id) {
-                const newPrivateChat = new Map(privateChats);
 
-                const existingMessages = newPrivateChat.get(`${id}`) || [];
+                setPrivateChats(prevMap => new Map(prevMap.set(`${id}`, [...prevMap.get(`${id}`), chatMessage])));
                 
-                const updatedMessages = [...existingMessages, chatMessage];
-                // newPrivateChat.set(`${id}`, updatedMessages);
-                privateChats.get(`${id}`).push(chatMessage);
-                setPrivateChats(new Map(privateChats));               
-                console.log(privateChats);
                 stompClient.current.send('/app/private-message', {}, JSON.stringify(chatMessage));
-                setUserData({...userData, message: ""});
+                setUserData(prevUserData => ({...prevUserData, message: ""}));
                 setReceivedMessages(map => new Map(map.set(`${id}`, receiverData.username)))
-                // setIsNewMessage(true);
+                setIsNewMessage(true);
+                setIsDeleted(false);
 
                 // fetchChatroomStatus(userData.id, id, token);
-                
-
             }
 
             
         }
-
-        
-        
     }
 
-    const handleClick = (type, userId, username) => {
+
+
+
+    const handleClick = (type, userId) => {
         
-        navigate(`/chat/${type}/${userId}`, { replace: false });
+        navigate(`/chat/${type}/${userId}`, { replace: true });
 
     }
     const handleValue = (event) => {
         const { name, value } = event.target;
         setUserData({...userData, [name]: value});
+    }
+
+    const handleInputMessage = (e) => {
+        setUserData(prevUserData => ({...prevUserData, message: e.target.innerText}));
     }
 
     const  splitIntoLines = (inputString, lineLength) => {
@@ -387,37 +393,70 @@ const Chatroom = () => {
         }
     }
 
-    const onDeleteButtonClick = (id) => {
-        // console.log(id);
+    const onDeleteButtonClick = (e, otherUserId) => {
+        e.stopPropagation();
+        console.log(id);
+        console.log(otherUserId);
         if(stompClient.current) {
             let chatroom = {
                 user1: userData.id,
-                user2: id,
+                user2: otherUserId,
             }
 
-            stompClient.current.send('/app/private-chat/delete', {}, JSON.stringify(chatroom));
-            receivedMessages.delete(id);
-            setReceivedMessages(receivedMessages);
+            // stompClient.current.send('/app/private-chat/delete', {}, JSON.stringify(chatroom));
+            axios.delete(`http://localhost:8080/private-chat/delete`, {
+                data: {
+                    user1: userData.id,
+                    user2: otherUserId,
+                }
+            })
+            .then(response => {
+                console.log(response.data.code);
+                if(response.data.code == 1) {
+                    receivedMessages.delete(otherUserId);
+                    setReceivedMessages(new Map(receivedMessages));
+                    
+                    if(privateChats.has(`${otherUserId}`)) {
+                        setPrivateChats(prevMap => {
+                            const newMap = new Map(prevMap);
+                            newMap.set(`${otherUserId}`, []);
+                            newMap.set(`${userData.id}`, []);
+                            setIsDeleted(true);
+                            return newMap;  
+                        })
+                    }
+                    setAccepted(true);
+                    // setIsDeleted(true);
+                    
+                    stompClient.current.send('/app/private-chat/delete', {}, JSON.stringify(chatroom));
 
-            privateChats.delete(`${id}`)
-            setPrivateChats(prevMap => {
-                const newMap = new Map(prevMap);
-                newMap.set(`${id}`, []);
-                return newMap;
-            });
+                    if(type == "private" && otherUserId == id) {
+                        navigate("/chat");
+                    }
+                }
 
-            // setAccepted(true);
-
+            })
         }
-
         
     }
 
-    const adjustTextareaHeight = (e) => {
-        e.target.style.maxHeight = "100px";
-        e.target.style.height = (e.target.scrollHeight) + "px";
-    } 
-
+    const onLogoutClick = () => {
+        if(stompClient.current) {
+            let chatMessage = {
+                senderName: userData.username,
+                senderId: userData.id,
+                senderAvatarColor: userData.avatarColor,
+                status: "LEAVE"
+            }     
+            stompClient.current.send('/app/disconnect/public', {}, JSON.stringify(chatMessage));
+            localStorage.getItem("jwtToken") ? localStorage.removeItem("jwtToken") : sessionStorage.removeItem("jwtToken");
+            stompClient.current.disconnect(() => {
+                console.log(`User ${userData.username} disconnected`);
+            });
+            navigate("/auth/login");
+        }
+        
+    }
 
 
     return(
@@ -425,41 +464,43 @@ const Chatroom = () => {
         <div className="container home">
             {token ? <div className="chat-box">
                 <div className="member-list">
-                    {onlineUsers.length > 1 && <ul className="online-users">
+                    {/* {onlineUsers.length > 1 && <ul className="online-users">
                         {onlineUsers.filter(user => user.username !== userData.username).map((user) => (
-                            <li onClick={() => handleClick("private", user.id, user.username)} className="user"  key={user.id}>
+                            <li onClick={() => handleClick("private", user.id)} className="user"  key={user.id}>
                                 <div className="user-color" style={{backgroundColor: `${user.avatarColor}`, color: user.avatarColor}}></div>
                                 <div className="online-sign"></div>
                                 {user.username}
                             </li>
                         ))}
-                    </ul>}
+                    </ul>} */}
+
+                    <OnlineUsers onlineUsers={onlineUsers} userData={userData} handleClick={handleClick}/>
                     <ul className="chat-users">
-                        <li onClick={() => handleClick("public", 1, "Chatroom")} className={`member active`} key={1}>
+                        <li onClick={() => handleClick("public", 1, "Chatroom")} className="member" key={1}>
                             <div>
-                            <span>Chatroom</span>
+                                <span>Chatroom</span>
                                 {type != "public" && <div className="new-message-preview">Click to join public chat</div>}
                                 {id && type == "public" && publicChats.length > 0 && (<div className="new-message-preview">
                                     {publicChats[publicChats.length - 1].senderName != userData.username ? `${publicChats[publicChats.length - 1].senderName}: ` : ""}
-                                        {publicChats[publicChats.length - 1].message}
+                                    {publicChats[publicChats.length - 1].message}
                                     
                                 </div>)}
                             </div>
                         </li>
                         
-                        {[...receivedMessages.keys()].filter(id => id != userData.id).map((id, index=index + 1) => (
-                            <li className="member" onClick={() => handleClick("private", id, "")} key={index}>
-                                {console.log(privateChats)}
+                        {[...receivedMessages.keys()].filter(otherUserId => otherUserId != userData.id).map((otherUserId, index=index + 1) => (
+                            <li className={`member ${otherUserId == id && type == "private" ? "active": ""}`} onClick={() => handleClick("private", otherUserId, "")} key={index}>
+                                {/* {console.log(privateChats)} */}
                                 <div>
-                                    <span>{receivedMessages.get(id)}</span>   
-                                    {privateChats.has(`${id}`) && console.log(privateChats.get(`${id}`))}
-                                    {privateChats.has(`${id}`) && privateChats.get(`${id}`).length > 0 && (<div className="new-message-preview">
+                                    <span>{receivedMessages.get(otherUserId)}</span>   
+                                    {/* {privateChats.has(`${id}`) && console.log(privateChats.get(`${id}`))} */}
+                                    {privateChats.has(`${otherUserId}`) && privateChats.get(`${otherUserId}`).length > 0 && (<div className="new-message-preview">
                                         
-                                        {privateChats.get(`${id}`)[privateChats.get(`${id}`).length - 1].message}
+                                        {privateChats.get(`${otherUserId}`)[privateChats.get(`${otherUserId}`).length - 1].message}
                                     </div>)}
                                 </div>
                                 
-                                <button onClick={() => onDeleteButtonClick(id)}>Delete</button>
+                                <button onClick={(e) => onDeleteButtonClick(e, otherUserId)} className="delete-chat-button"><i className="fa-solid fa-trash"></i></button>
                             </li>
                         ))}
                     </ul>
@@ -472,7 +513,7 @@ const Chatroom = () => {
 
                     {menuVisible && <div className="setting-detail">
                         <div href="/settings"><i className="fa-solid fa-gear"></i> Setting</div>
-                        <div ><i className="fa-solid fa-right-from-bracket"></i> Log out</div>
+                        <div onClick={onLogoutClick}><i className="fa-solid fa-right-from-bracket"></i> Log out</div>
                     </div>}
                 </div>
                 
@@ -497,58 +538,32 @@ const Chatroom = () => {
                                 
                                 </div>
                             </div>
-                            <ul className="chat-messages" ref={messageEndRef}>
+                            <div className="chat-messages" ref={messageEndRef}>
                                 {/* {console.log(publicChats)} */}
                                 {publicChats.map((chat, index) => (
                                     
-                                    <li className="message" key={index}>
+                                    <div className="message" key={index}>
                                         <div className={`${chat.senderId != userData.id ? "guest" : "self"}`}>
                                             {chat.senderId !== userData.id && <div className={`avatar guest`} style={{backgroundColor: chat.senderAvatarColor}}></div>}
                                             <div className="message-data">
-                                                <div className="sender-name">{chat.senderName }</div>
+                                                <div className="sender-name">{chat.senderName}</div>
                                                 {splitIntoLines(chat.message, 50)}
                                             </div>
                                             {chat.senderId === userData.id && <div className="avatar self" style={{backgroundColor: userData.avatarColor}}>{}</div>}
                                         </div>
-                                    </li>
+                                    </div>
                                 ))}
                                 
                                 {/* <div ref={messageEndRef} /> */}
-                            </ul>
-                            
-                        
-                        
-                            <div className="send-message">
-                            
-                                {emojiPickerVisible && <EmojiPicker className="emoji-picker" onEmojiClick={onEmojiClick}/>}
-                                <button className="emoji-toggle" onClick={emojiPickerClick}><i className="fa-regular fa-face-smile " ></i></button>
-                                <textarea 
-                                    className="input-message" 
-                                    name="message"
-                                    placeholder="Message..."
-                                    value={userData.message}
-                                    // rows={"auto"}
-                                    rows={1}
-                                    onChange={(e) => {
-                                        handleValue(e);
-                                        adjustTextareaHeight(e);
-                                    }}
-                                    style={{
-                                        display: "block",
-                                        overflow: "hidden",
-                                        resize: "none",
-                                        minHeight: "40px"
-                                    }}>
-
-                                </textarea>
-                                    
-                                
-                                <button type='button' className='send-button' onClick={sendPublicMessage} style={{color: userData.avatarColor}}>
-                                    {userData.message && <i className="fa-solid fa-paper-plane"></i>}
-                                    {!userData.message && <i className="fa-regular fa-heart"></i>}
-                                </button>
-                                
                             </div>
+                            
+                        
+                            <InputField 
+                                sendFunction={sendPublicMessage}
+                                userData={userData}
+                                setUserData={setUserData}
+                                
+                            />
                         </>
                     }
 
@@ -560,7 +575,6 @@ const Chatroom = () => {
                             onlineUsers={onlineUsers}
                             messageEndRef={messageEndRef}
                             emojiPickerVisible={emojiPickerVisible}
-                            emojiPickerClick={emojiPickerClick}
                             onEmojiClick={onEmojiClick}
                             sendPrivateMessage={sendPrivateMessage}
                             handleValue={handleValue}
@@ -570,6 +584,7 @@ const Chatroom = () => {
                             accepted={accepted}
                             deletedMessage={deletedMessage}
                             isDeleted={isDeleted}
+                            setUserData={setUserData}
                             />)
                     }
                 </div>

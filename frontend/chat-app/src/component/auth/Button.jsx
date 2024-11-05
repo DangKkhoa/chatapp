@@ -6,13 +6,14 @@ import ErrorBox from "./ErrorBox";
 
 const Button = (props) => {
     const [error, setError] = useState();
+    const [isClicked, setIsClicked] = useState(false);
     const navigate = useNavigate();
 
     
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // console.log(userData);
+        
         try {
             const response = await axios.post(`http://localhost:8080/auth/${props.type}`, props.userData);
             const responseData = response.data;
@@ -26,13 +27,11 @@ const Button = (props) => {
                 if(props.type == "login") {
                     if(props.isRememberLoginChecked) {
                         localStorage.setItem("jwtToken", responseData.message);
-                        localStorage.setItem("user", JSON.stringify(responseData.userSessionDTO));
                     }
                     else {
                         sessionStorage.setItem("jwtToken", responseData.message);
-                        sessionStorage.setItem("user", JSON.stringify(responseData.userSessionDTO));
                     }
-                    
+                    setIsClicked(true);
                     
                     navigate("/", { replace: true });
                 }
@@ -54,7 +53,10 @@ const Button = (props) => {
     return(
         <>
             <ErrorBox message={error}/>
-            <button type="submit" className={`btn ${props.type === "login" ? "submit-btn" : "register-btn"}`} onClick={handleSubmit}>{props.type == "login" ? "Login" : "Register"}</button>
+            <button type="submit" className={`btn ${props.type === "login" ? "submit-btn" : "register-btn"}`} onClick={handleSubmit}>
+                {!isClicked && (props.type == "login" ? "Login" : "Register")}
+                {isClicked && "Logging in..."}
+            </button>
         </>
     );
 

@@ -1,10 +1,10 @@
 import DeletedMessage from "./DeletedMessage";
 
-const ChatAcceptPending = ({isDeleted}) => {
+const ChatAcceptPending = ({isDeleted, receiverName}) => {
     return(
         <>
             {!isDeleted ? <div>
-                <p>Invitation has been sent. Please wait for the receiver to accept.</p>
+                <p>Invitation has been sent. Please wait for <b>{receiverName}</b> to accept.</p>
             </div>
             :
             <DeletedMessage />}
