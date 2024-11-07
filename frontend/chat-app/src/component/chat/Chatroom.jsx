@@ -21,7 +21,6 @@ const Chatroom = () => {
     const [systemMessage, setSystemMessage] = useState("");
     const [accepted, setAccepted] = useState(true);
     const [menuVisible, setMenuVisible] = useState(false);
-    const [isConnected, setConnect] = useState(false);
     const [isNewMessage, setIsNewMessage] = useState(false);
     const [deletedMessage, setDeletedMEssage] = useState("");
     const [isDeleted, setIsDeleted] = useState(false);
@@ -210,7 +209,7 @@ const Chatroom = () => {
                 status: "JOIN"
             }
             stompClient.current.send('/app/join/private', {}, JSON.stringify(message));
-            setConnect(true);
+            // setConnect(true);
         }
     }
 
@@ -284,13 +283,7 @@ const Chatroom = () => {
             newMap.set(`${userData.id}`, []);
             return newMap;
         })
-        
-        // privateChats.set(`${idToDelete}`, []);
-        // privateChats.set(`${userData.id}`, [])
-        // // privateChats.clear();
-        // setPrivateChats(new Map(privateChats));
 
-        
         setDeletedMEssage("Message has been deleted");
         setIsDeleted(true);
         setAccepted(false);        
@@ -352,9 +345,7 @@ const Chatroom = () => {
 
 
     const handleClick = (type, userId) => {
-        
-        navigate(`/chat/${type}/${userId}`, { replace: true });
-
+        window.location.href = `/chat/${type}/${userId}`
     }
     const handleValue = (event) => {
         const { name, value } = event.target;
@@ -511,13 +502,13 @@ const Chatroom = () => {
                         <span>More</span>
                     </div>
 
-                    {menuVisible && <div className="setting-detail">
-                        <div href="/settings"><i className="fa-solid fa-gear"></i> Setting</div>
-                        <div onClick={onLogoutClick}><i className="fa-solid fa-right-from-bracket"></i> Log out</div>
-                    </div>}
+                    
                 </div>
                 
-                    
+                {menuVisible && <div className="setting-detail">
+                    <div href="/settings"><i className="fa-solid fa-gear"></i> Setting</div>
+                    <div onClick={onLogoutClick}><i className="fa-solid fa-right-from-bracket"></i> Log out</div>
+                </div>}
                 <div className="chat-content">
                     {!id && <div style={{textAlign: "center", color: "#737373"}}>
                         Select a person or group you want to chat.

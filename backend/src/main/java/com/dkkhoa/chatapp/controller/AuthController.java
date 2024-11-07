@@ -29,7 +29,10 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-
+    private String[] avatarColors = {
+            "#fcba03", "#16f296", "#bce640",
+            "#68cdf2", "#e386d0", "#e38699"
+    };
 
     @PostMapping("/register")
     @ResponseBody
@@ -55,11 +58,13 @@ public class AuthController {
                 return new CustomResponse(4, "Email address has already been used");
             }
 
+            String userAvatarColor = avatarColors[(int)(Math.random() * avatarColors.length)];
+
             User newUser = new User();
             newUser.setEmail(user.getEmail());
             newUser.setUsername(user.getUsername());
             newUser.setPassword(user.getPassword());
-            newUser.setAvatarColor(user.getAvatarColor());
+            newUser.setAvatarColor(userAvatarColor);
             User userToBeSaved = userService.registerUser(newUser);
             if(userToBeSaved == null) {
                 return new CustomResponse(5, "Something went wrong");

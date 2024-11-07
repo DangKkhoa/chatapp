@@ -39,6 +39,10 @@ public class ChatService {
     public Message storePublicMessage(Message message) {
         try {
             Chatroom publicChatroom = chatRepository.findByChatroomId("chatroom-1");
+            if(publicChatroom == null) {
+                publicChatroom = new Chatroom("chatroom-1");
+                chatRepository.save(publicChatroom);
+            }
             message.setChatroom(publicChatroom);
 
             return messageRepository.save(message);

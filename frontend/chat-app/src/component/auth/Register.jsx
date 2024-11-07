@@ -3,21 +3,23 @@ import "../../style/auth.css"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Button from "./Button";
+import ToggleViewPassword from "./ToggleViewPassword";
 
 const Register = () => {
-    const backgroundColors = [
-        "#fcba03", "#16f296", "#bce640",
-        "#68cdf2", "#e386d0", "#e38699"
-    ];
+    // const backgroundColors = [
+    //     "#fcba03", "#16f296", "#bce640",
+    //     "#68cdf2", "#e386d0", "#e38699"
+    // ];
 
-    const avatarColor = backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
+    //const avatarColor = backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
     const [userData, setUserData] = useState({
         email: "",
         username: "",
         password: "",
         confirmedPassword: "",
-        avatarColor: avatarColor,
+        //avatarColor: avatarColor,
     })
+    const [passwordVisible, setPasswordVisible] = useState(false) 
     const [error, setError] = useState("");
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -45,8 +47,8 @@ const Register = () => {
     }
     return(
         <div className="container register" >
-            <div id="logo" className="register">
-                <h1 className="title">Messenger Clone</h1>
+            <div id="logo" className="register-logo">
+                <h1 className="title">Quickchat</h1>
             </div>
             <form id="register-form">
                 <h1>Create a new account</h1>
@@ -74,28 +76,36 @@ const Register = () => {
                         onChange={handleValueChange}/>
                 </div>
 
-                <div className="form-group">
+                <div className="form-group password">
                     <label htmlFor="">Password:</label><br/>
                     <input 
-                        type="password" 
+                        type={passwordVisible ? "text" : "password"} 
                         name="password" 
                         className="form-input" 
                         id="password"
                         placeholder="Confirm your password"
                         value={userData.password}
                         onChange={handleValueChange}/>
+                    {/* <ToggleViewPassword 
+                        passwordVisible={passwordVisible} 
+                        setPasswordVisible={setPasswordVisible} 
+                        userData={userData}/> */}
                 </div>
 
-                <div className="form-group">
+                <div className="form-group password">
                     <label htmlFor="">Confirm password:</label><br/>
                     <input 
-                        type="password" 
+                        type={passwordVisible ? "text" : "password"} 
                         name="confirmedPassword" 
                         className="form-input" 
                         id="confirm-password"
                         placeholder="Enter your password"
                         value={userData.confirmedPassword}
                         onChange={handleValueChange}/>
+                    {/* <ToggleViewPassword 
+                        passwordVisible={passwordVisible} 
+                        setPasswordVisible={setPasswordVisible} 
+                        userData={userData}/> */}
                 </div>
 
                 <Button type="register" userData={userData}/>

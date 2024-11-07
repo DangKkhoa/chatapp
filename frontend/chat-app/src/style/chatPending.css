@@ -1,0 +1,11 @@
+.chat-pending-message {
+    text-align: center;
+    padding: 5px;
+    border-top: 1px solid rgb(221, 221, 221);
+}
+
+
+
+.chat-pending-message span {
+    color: rgb(92, 92, 92)
+}

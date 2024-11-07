@@ -20,7 +20,7 @@ body {
     width: 75%;
     box-sizing: border-box;
     height: 100vh;
-    padding: 0 40px;
+    /* padding: 0 40px; */
     margin: auto;
     display: flex;
     align-items: center;
@@ -32,11 +32,12 @@ body {
 }
 
 .container.register {
+    padding: 10px 40px;
     flex-direction: column;
     justify-content: center;
 }
 
-#logo {
+#logo.login-logo {
     flex: 3;
 }
 

@@ -1,10 +1,12 @@
 import DeletedMessage from "./DeletedMessage";
+import "../../style/chatPending.css"
 
 const ChatAcceptPending = ({isDeleted, receiverName}) => {
     return(
         <>
-            {!isDeleted ? <div>
-                <p>Invitation has been sent. Please wait for <b>{receiverName}</b> to accept.</p>
+            {!isDeleted ? <div className="chat-pending-message">
+                <h3>Invitation send</h3>
+                <span>You can send more messages after chat is accepted</span>
             </div>
             :
             <DeletedMessage />}

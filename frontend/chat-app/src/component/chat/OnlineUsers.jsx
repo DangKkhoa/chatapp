@@ -1,5 +1,6 @@
 
 const OnlineUsers = ({ onlineUsers, userData, handleClick }) => {
+    
     return(
         <>
             {onlineUsers.length > 1 && <ul className="online-users">

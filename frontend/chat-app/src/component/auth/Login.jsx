@@ -1,17 +1,22 @@
-import { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { replace, useNavigate } from 'react-router-dom';
 import "../../style/auth.css"
 import axios from "axios";
 import Button from "./Button";
 import chatLogo from "../../assets/chat.png";
+import ToggleViewPassword from "./ToggleViewPassword";
+
 
 const Login = () => {
     
+    const navigate = useNavigate();
     const [userData, setUserData] = useState({
         email: "",
         password: "", 
         
     })
+
+
     const [isChecked, setIsChecked] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false) 
 
@@ -24,18 +29,38 @@ const Login = () => {
         setIsChecked(event.target.checked);
     }
 
-    const toggleViewPassword = () => {
-        if(passwordVisible) {
-            setPasswordVisible(false);
-        }
-        else {
-            setPasswordVisible(true);
-        }
+    useEffect(() => {
+        const token = localStorage.getItem("jwtToken") || sessionStorage.getItem("jwtToken");
+        verifyToken(token);
+    },[])
+
+    const verifyToken = (token) => {
+        axios.get("http://localhost:8080/auth/jwt-verify", {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                const responseData = response.data;
+                if(responseData.code === 10) {                    
+                    navigate("/chat", {replace: true});
+                    
+                }
+                else {
+                    // localStorage.clear();
+                    navigate("/auth/login");
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                navigate("/auth/login");
+            })
+        
     }
 
     return(
         <div className="container login" >
-            <div id="logo" className="">
+            <div id="logo" className="login-logo">
                 <h1 className="title">QuickChat</h1>
                 <p className="sub-title">Connect and send messages to everyone with superior speed <span style={{color: "#f5c938"}}><i className="fa-solid fa-bolt"></i></span></p>
             </div>
@@ -62,9 +87,13 @@ const Login = () => {
                         onChange={handleValueChange}
                         
                         />
-                    <div onClick={toggleViewPassword} className={`toggle-password ${userData.password && "visible"}`}>
+                    {/* <div onClick={toggleViewPassword} className={`toggle-password ${userData.password && "visible"}`}>
                         {passwordVisible ? <i className="fa-solid fa-eye-slash"></i> : <i className="fa-solid fa-eye"></i>}
-                    </div>
+                    </div> */}
+                    <ToggleViewPassword 
+                        passwordVisible={passwordVisible} 
+                        setPasswordVisible={setPasswordVisible} 
+                        userData={userData}/>
                 </div>
                 <div className="remember-login">
                     <input 

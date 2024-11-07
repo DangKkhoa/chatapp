@@ -170,7 +170,7 @@ ul {
     padding: 10px;
     z-index: 10;
     bottom: 100px;
-    right: 0;
+    left: 30px;
     width: 200px;
     /* padding: 10px; */
     font-size: 1.2rem;
