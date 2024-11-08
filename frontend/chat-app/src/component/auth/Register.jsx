@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../../style/auth.css"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,10 @@ const Register = () => {
         confirmedPassword: "",
         //avatarColor: avatarColor,
     })
-    const [passwordVisible, setPasswordVisible] = useState(false) 
+    const navigate = useNavigate();
+    const [passwordVisible, setPasswordVisible] = useState(false)
+    const [isSuccess, setIsSuccess] = useState(false); 
+    const [redirectingTime, setRedirectingTime] = useState(3);
     const [error, setError] = useState("");
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -45,11 +48,36 @@ const Register = () => {
             setUserData({...userData, [name]: value});
         }
     }
+
+    useEffect(() => {
+        let time = 3;
+        if(isSuccess) {
+            let intervalId = setInterval(() => {
+                time--;
+                setRedirectingTime(prev => prev - 1);
+                if(time == 0) {
+                    clearInterval(intervalId);
+                    navigate("/auth/login");
+                }
+            }, 1000);
+
+            
+        }
+        
+    }, [isSuccess])
+
+
     return(
         <div className="container register" >
+            
             <div id="logo" className="register-logo">
                 <h1 className="title">Quickchat</h1>
             </div>
+            {isSuccess && <div className="register-success">
+                User register successfully.
+                Redirecting in <span style={{color: "red"}}>{redirectingTime}</span>
+                
+            </div>}
             <form id="register-form">
                 <h1>Create a new account</h1>
                 <div className="form-group">
@@ -108,7 +136,7 @@ const Register = () => {
                         userData={userData}/> */}
                 </div>
 
-                <Button type="register" userData={userData}/>
+                <Button type="register" userData={userData} setIsSuccess={setIsSuccess}/>
                 <p>Already have an account? <a href="/auth/login" >Click here to login</a></p>
             </form>
         </div>

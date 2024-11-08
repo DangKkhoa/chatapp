@@ -36,6 +36,12 @@ const InputField = ({ sendFunction, userData, setUserData }) => {
     
     }
 
+    const handleEnterKey = (e) => {
+        if(e.key === "Enter") {
+            sendMessage();
+        }
+    }
+
     const sendMessage = () => {
         if(userData.message.length > MESSAGE_MAX_LENGTH) {
             setIsMessageTooLong(true);
@@ -46,7 +52,8 @@ const InputField = ({ sendFunction, userData, setUserData }) => {
                                     .replace(/<\/div>/g,'')
                                     .replace(/<div>/g,'\n')
                                     .replace(/<br>/g, '\n')
-                                    .replace(/&nbsp;/g, '');
+                                    .replace(/&nbsp;/g, '')
+                                    .trim();
 
         sendFunction(formattedMessage);
         
@@ -63,7 +70,7 @@ const InputField = ({ sendFunction, userData, setUserData }) => {
     // }, [userData.message])
 
     return(
-        <>
+        <div className="send-message-container">
             {isMessageTooLong && <div className="long-message-alert">Your message is too long (250 words only)</div>}
             <div className="send-message">
                             
@@ -90,7 +97,7 @@ const InputField = ({ sendFunction, userData, setUserData }) => {
             </div>
             
 
-        </>
+        </div>
     );
 }
 

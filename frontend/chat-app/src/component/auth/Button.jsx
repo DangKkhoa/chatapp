@@ -7,6 +7,7 @@ import ErrorBox from "./ErrorBox";
 const Button = (props) => {
     const [error, setError] = useState();
     const [isClicked, setIsClicked] = useState(false);
+    
     const navigate = useNavigate();
 
     
@@ -36,7 +37,9 @@ const Button = (props) => {
                     navigate("/", { replace: true });
                 }
                 else {
-                    navigate("/auth/login", { replace: true });
+                    setIsClicked(true);
+                    props.setIsSuccess(true);
+                    //navigate("/auth/login", { replace: true });
                 }
                 
             }
@@ -55,7 +58,7 @@ const Button = (props) => {
             <ErrorBox message={error}/>
             <button type="submit" className={`btn ${props.type === "login" ? "submit-btn" : "register-btn"}`} onClick={handleSubmit}>
                 {!isClicked && (props.type == "login" ? "Login" : "Register")}
-                {isClicked && "Logging in..."}
+                {isClicked && (props.type == "login" ? "Logging in..." : "Redirecting...")}
             </button>
         </>
     );

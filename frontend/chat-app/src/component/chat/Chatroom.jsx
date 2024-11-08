@@ -8,6 +8,7 @@ import PrivateChats from "./PrivateChats.jsx";
 import "../../style/home.css";
 import InputField from "./InputField.jsx";
 import OnlineUsers from "./OnlineUsers.jsx";
+import UserAvatar from "./UserAvatar.jsx";
 const Chatroom = () => {
     const token = sessionStorage.getItem("jwtToken") || localStorage.getItem("jwtToken");
     const { type, id } = useParams();
@@ -27,13 +28,13 @@ const Chatroom = () => {
     const [receiverData, setReceiverData] = useState({
         id: 0,
         username: "",
-        avatarColor: "",
+        avatar: "",
     })
     
     const [userData, setUserData] = useState({
         id: 0,
         username: "",
-        avatarColor: "",
+        avatar: "",
         connected: false,
         message: ""
     })
@@ -57,11 +58,12 @@ const Chatroom = () => {
                 const responseData = response.data;
                 if(responseData.code === 10) {                    
                     const user = responseData.userSessionDTO;
+                    console.log(user.avatarColor);
                     setUserData(userData => ({
                         ...userData, 
                         username: user.username,
                         id: user.id,
-                        avatarColor: user.avatarColor
+                        avatar: user.avatar
                     }))
                     if(userData.id) {
                         fetchPublicChatHistory("public");
@@ -145,7 +147,7 @@ const Chatroom = () => {
             ...prev, 
             id: responseData.id,
             username: responseData.username,
-            avatarColor: responseData.avatarColor,
+            avatar: responseData.avatar,
 
         }))
         
@@ -192,7 +194,7 @@ const Chatroom = () => {
             let chatMessage = {
                 senderName: userData.username,
                 senderId: userData.id,
-                senderAvatarColor: userData.avatarColor,
+                senderAvatar: userData.avatar,
                 status: "JOIN"
             }            
             stompClient.current.send('/app/join/public', {}, JSON.stringify(chatMessage));
@@ -295,7 +297,7 @@ const Chatroom = () => {
             let chatMessage = {
                 senderId: userData.id,
                 senderName: userData.username,
-                senderAvatarColor: userData.avatarColor,
+                senderAvatar: userData.avatar,
                 message: message || "❤️",
                 status: 'MESSAGE',
                 token: token
@@ -315,7 +317,7 @@ const Chatroom = () => {
             let chatMessage = {
                 senderId: `${userData.id}`,
                 senderName: userData.username,
-                senderAvatarColor: userData.avatarColor,
+                senderAvatar: userData.avatar,
                 receiverId: `${id}`,
                 receiverName: receiverData.username,
                 message: message || "❤️",
@@ -436,7 +438,7 @@ const Chatroom = () => {
             let chatMessage = {
                 senderName: userData.username,
                 senderId: userData.id,
-                senderAvatarColor: userData.avatarColor,
+                senderAvatar: userData.avatar,
                 status: "LEAVE"
             }     
             stompClient.current.send('/app/disconnect/public', {}, JSON.stringify(chatMessage));
@@ -453,6 +455,7 @@ const Chatroom = () => {
     return(
         
         <div className="container home">
+            <OnlineUsers onlineUsers={onlineUsers} userData={userData} handleClick={handleClick}/>
             {token ? <div className="chat-box">
                 <div className="member-list">
                     {/* {onlineUsers.length > 1 && <ul className="online-users">
@@ -465,7 +468,7 @@ const Chatroom = () => {
                         ))}
                     </ul>} */}
 
-                    <OnlineUsers onlineUsers={onlineUsers} userData={userData} handleClick={handleClick}/>
+                    
                     <ul className="chat-users">
                         <li onClick={() => handleClick("public", 1, "Chatroom")} className="member" key={1}>
                             <div>
@@ -498,8 +501,11 @@ const Chatroom = () => {
                     
 
                     <div className="setting" onClick={handleOptionClick}>
-                        <i className="fa-solid fa-bars"></i>
-                        <span>More</span>
+                        {/* <i className="fa-solid fa-bars"></i> */}
+                        <div style={{width: "50px", height: "50px"}}>
+                            <UserAvatar avatar={userData.avatar}/>
+                        </div>
+                        <span>{userData.username}</span>
                     </div>
 
                     
@@ -530,17 +536,23 @@ const Chatroom = () => {
                                 </div>
                             </div>
                             <div className="chat-messages" ref={messageEndRef}>
-                                {/* {console.log(publicChats)} */}
+                                {console.log(publicChats)}
+                                
                                 {publicChats.map((chat, index) => (
+                                    
                                     
                                     <div className="message" key={index}>
                                         <div className={`${chat.senderId != userData.id ? "guest" : "self"}`}>
-                                            {chat.senderId !== userData.id && <div className={`avatar guest`} style={{backgroundColor: chat.senderAvatarColor}}></div>}
+                                            {chat.senderId !== userData.id && <div className={`avatar guest`} style={{}}>
+                                                    <UserAvatar avatar={chat.senderAvatar} />
+                                                </div>}
                                             <div className="message-data">
                                                 <div className="sender-name">{chat.senderName}</div>
                                                 {splitIntoLines(chat.message, 50)}
                                             </div>
-                                            {chat.senderId === userData.id && <div className="avatar self" style={{backgroundColor: userData.avatarColor}}>{}</div>}
+                                            {chat.senderId === userData.id && <div className="avatar self">
+                                                    <UserAvatar avatar={chat.senderAvatar} />
+                                                </div>}
                                         </div>
                                     </div>
                                 ))}

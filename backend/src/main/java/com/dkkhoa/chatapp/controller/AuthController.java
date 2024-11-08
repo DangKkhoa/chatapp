@@ -29,9 +29,10 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    private String[] avatarColors = {
-            "#fcba03", "#16f296", "#bce640",
-            "#68cdf2", "#e386d0", "#e38699"
+    private String[] avatars = {
+            "user_1", "user_2", "user_3",
+            "user_4", "user_5", "user_6",
+            "user_7"
     };
 
     @PostMapping("/register")
@@ -58,13 +59,13 @@ public class AuthController {
                 return new CustomResponse(4, "Email address has already been used");
             }
 
-            String userAvatarColor = avatarColors[(int)(Math.random() * avatarColors.length)];
+            String userAvatar = avatars[(int)(Math.random() * avatars.length)];
 
             User newUser = new User();
             newUser.setEmail(user.getEmail());
             newUser.setUsername(user.getUsername());
             newUser.setPassword(user.getPassword());
-            newUser.setAvatarColor(userAvatarColor);
+            newUser.setAvatar(userAvatar);
             User userToBeSaved = userService.registerUser(newUser);
             if(userToBeSaved == null) {
                 return new CustomResponse(5, "Something went wrong");
@@ -79,7 +80,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseBody
-    public CustomResponse login(HttpSession session, @RequestBody User user) {
+    public CustomResponse login(@RequestBody User user) {
         System.out.println(user);
 
         User userFound = userService.getUser(user);
@@ -99,7 +100,7 @@ public class AuthController {
             userSessionDTO.setId(userFound.getId());
             userSessionDTO.setEmail(userFound.getEmail());
             userSessionDTO.setUsername(userFound.getUsername());
-            userSessionDTO.setAvatarColor(userFound.getAvatarColor());
+            userSessionDTO.setAvatar(userFound.getAvatar());
             return new CustomResponse(1, token, userSessionDTO);
         }
         return new CustomResponse(4, "Wrong username or password");
@@ -128,7 +129,7 @@ public class AuthController {
             userSessionDTO.setId(user.getId());
             userSessionDTO.setEmail(user.getEmail());
             userSessionDTO.setUsername(user.getUsername());
-            userSessionDTO.setAvatarColor(user.getAvatarColor());
+            userSessionDTO.setAvatar(user.getAvatar());
             return new CustomResponse(10, token, userSessionDTO);
         }
         catch (Exception e) {

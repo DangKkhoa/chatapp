@@ -45,6 +45,9 @@ const router = createBrowserRouter([
     path: "/chat/:type/:id",
     element: <Chatroom />
   },
+  {
+    path: "/online-users"
+  }
 
 ]);
 

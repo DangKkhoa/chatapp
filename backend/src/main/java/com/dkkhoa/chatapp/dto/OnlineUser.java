@@ -1,17 +1,19 @@
 package com.dkkhoa.chatapp.dto;
 
+
+
 public class OnlineUser {
     private int id;
     private String username;
-    private String avatarColor;
+    private String avatar;
 
     public OnlineUser() {
     }
 
-    public OnlineUser(int id, String username, String avatarColor) {
+    public OnlineUser(int id, String username, String avatar) {
         this.id = id;
         this.username = username;
-        this.avatarColor = avatarColor;
+        this.avatar = avatar;
     }
 
     public int getId() {
@@ -30,12 +32,12 @@ public class OnlineUser {
         this.username = username;
     }
 
-    public String getAvatarColor() {
-        return avatarColor;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAvatarColor(String avatarColor) {
-        this.avatarColor = avatarColor;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     @Override
@@ -43,7 +45,7 @@ public class OnlineUser {
         return "OnlineUser{" +
                 "id: " + id +
                 ", username: " + username +
-                ", avatarColor: " + avatarColor +
+                ", avatar: " + avatar +
                 '}';
     }
 }

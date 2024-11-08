@@ -52,6 +52,16 @@ body {
     font-size: 2rem;
 }
 
+.register-success {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #5bb450;
+    padding: 15px;
+    color: #ffffff;
+    /* transition-duration: .7s; */
+}
+
 form {
     background-color: white;
     border-radius: 10px;

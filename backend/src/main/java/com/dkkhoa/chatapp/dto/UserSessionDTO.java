@@ -4,15 +4,15 @@ public class UserSessionDTO {
     private int id;
     private String email;
     private String username;
-    private String avatarColor;
+    private String avatar;
 
     public UserSessionDTO() {}
 
-    public UserSessionDTO(int id, String email, String username, String avatarColor) {
+    public UserSessionDTO(int id, String email, String username, String avatar) {
         this.id = id;
         this.email = email;
         this.username = username;
-        this.avatarColor = avatarColor;
+        this.avatar = avatar;
     }
 
     public int getId() {
@@ -39,12 +39,12 @@ public class UserSessionDTO {
         this.username = username;
     }
 
-    public String getAvatarColor() {
-        return avatarColor;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAvatarColor(String avatarColor) {
-        this.avatarColor = avatarColor;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
 
@@ -54,7 +54,7 @@ public class UserSessionDTO {
                 "id: " + id +
                 ", email: " + email +
                 ", username: " + username +
-                ", avatarColor: " + avatarColor +
+                ", avatar: " + avatar +
                 '}';
     }
 }

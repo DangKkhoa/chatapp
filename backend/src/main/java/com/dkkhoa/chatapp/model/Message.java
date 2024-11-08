@@ -18,7 +18,7 @@ public class Message {
     private int messageId;
     private int senderId;
     private String senderName;
-    private String senderAvatarColor;
+    private String senderAvatar;
     private String receiverName;
     private int receiverId;
     private String message;

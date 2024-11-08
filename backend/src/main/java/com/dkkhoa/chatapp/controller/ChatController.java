@@ -20,10 +20,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 
@@ -92,7 +89,7 @@ public class ChatController {
         System.out.println(message);
         boolean onlineUserExist = onlineUsers.stream().anyMatch(user -> user.getId() == message.getSenderId());
         if(!onlineUserExist) {
-            onlineUsers.add(new OnlineUser(message.getSenderId(), message.getSenderName(), message.getSenderAvatarColor()));
+            onlineUsers.add(new OnlineUser(message.getSenderId(), message.getSenderName(), message.getSenderAvatar()));
 //            simpMessagingTemplate.convertAndSend("/topic/online-users", onlineUsers);
 
             Message joinMessage = new Message();

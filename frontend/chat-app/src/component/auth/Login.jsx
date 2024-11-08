@@ -16,6 +16,10 @@ const Login = () => {
         
     })
 
+    useEffect(() => {
+        document.title = "Login"
+    }, [])
+
 
     const [isChecked, setIsChecked] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false) 

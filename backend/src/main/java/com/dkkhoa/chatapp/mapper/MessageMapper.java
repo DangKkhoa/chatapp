@@ -15,7 +15,7 @@ public class MessageMapper {
         }
         message.setReceiverName(messageDTO.getReceiverName());
         message.setStatus(messageDTO.getStatus());
-        message.setSenderAvatarColor(messageDTO.getSenderAvatarColor());
+        message.setSenderAvatar(messageDTO.getSenderAvatar());
         return message;
     }
 }
