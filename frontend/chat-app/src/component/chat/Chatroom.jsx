@@ -9,6 +9,8 @@ import "../../style/home.css";
 import InputField from "./InputField.jsx";
 import OnlineUsers from "./OnlineUsers.jsx";
 import UserAvatar from "./UserAvatar.jsx";
+import PublicChat from "./PublicChat.jsx";
+import ChatHeader from "./ChatHeader.jsx";
 const Chatroom = () => {
     const token = sessionStorage.getItem("jwtToken") || localStorage.getItem("jwtToken");
     const { type, id } = useParams();
@@ -521,53 +523,13 @@ const Chatroom = () => {
                     </div>}
                     
                     {type == "public" && 
-                        <>
-                            <div className="chat-header">
-                                <div className="chat-information">
-                                    <div className="chat-image"></div>
-                                    
-                                    <div>
-                                        <p className="chat-name">Chatroom</p>
-                                        <p className="chat-status">Online</p>
-                                    </div>
-                                </div>
-                                <div className="chat-setting">
-                                
-                                </div>
-                            </div>
-                            <div className="chat-messages" ref={messageEndRef}>
-                                {console.log(publicChats)}
-                                
-                                {publicChats.map((chat, index) => (
-                                    
-                                    
-                                    <div className="message" key={index}>
-                                        <div className={`${chat.senderId != userData.id ? "guest" : "self"}`}>
-                                            {chat.senderId !== userData.id && <div className={`avatar guest`} style={{}}>
-                                                    <UserAvatar avatar={chat.senderAvatar} />
-                                                </div>}
-                                            <div className="message-data">
-                                                <div className="sender-name">{chat.senderName}</div>
-                                                {splitIntoLines(chat.message, 50)}
-                                            </div>
-                                            {chat.senderId === userData.id && <div className="avatar self">
-                                                    <UserAvatar avatar={chat.senderAvatar} />
-                                                </div>}
-                                        </div>
-                                    </div>
-                                ))}
-                                
-                                {/* <div ref={messageEndRef} /> */}
-                            </div>
-                            
-                        
-                            <InputField 
-                                sendFunction={sendPublicMessage}
-                                userData={userData}
-                                setUserData={setUserData}
-                                
-                            />
-                        </>
+                        <PublicChat 
+                        publicChats={publicChats}
+                        messageEndRef={messageEndRef}
+                        userData={userData}
+                        splitIntoLines={splitIntoLines}
+                        setUserData={setUserData}
+                        sendPublicMessage={sendPublicMessage} />
                     }
 
                     {type == "private" && receiverData.id && (<PrivateChats 

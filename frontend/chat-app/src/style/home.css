@@ -15,7 +15,7 @@ body {
     /* justify-content: center; */
     /* align-items: center; */
     flex-direction: column;
-    /* gap: 20px; */
+    row-gap: 20px;
     /* background-size: ; */
 }
 
@@ -26,11 +26,19 @@ ul {
 
 
 .online-users-container {
+    position: relative;
     width: 100%;
-    /* background-color: white; */
-    /* padding: 10px; */
-    
+    background-color: white;
+    display: flex;
+    align-items: center;
     height: 100px;
+}
+
+.no-user-online {
+    text-align: center;
+    color: rgb(171, 171, 171);
+    font-weight: bold;
+
 }
 
 
@@ -344,7 +352,7 @@ ul {
 .sender-name {
     margin-bottom: 5px;
     font-size: .8rem;
-
+    font-weight: bold;
 }
 
 .message .self .message-data .sender-name {
