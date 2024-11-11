@@ -31,6 +31,8 @@ const Chatroom = () => {
         id: 0,
         username: "",
         avatar: "",
+        status: "",
+        thinking: "",
     })
     
     const [userData, setUserData] = useState({
@@ -58,25 +60,27 @@ const Chatroom = () => {
         })
             .then(response => {
                 const responseData = response.data;
-                if(responseData.code === 10) {                    
+                if (responseData.code === 10) {
                     const user = responseData.userSessionDTO;
                     console.log(user.avatarColor);
                     setUserData(userData => ({
-                        ...userData, 
+                        ...userData,
                         username: user.username,
                         id: user.id,
-                        avatar: user.avatar
+                        avatar: user.avatar,
+                        status: user.status,
+                        thinking: user.thinking
                     }))
-                    if(userData.id) {
+                    if (userData.id) {
                         fetchPublicChatHistory("public");
                         fetchSenderMessages(userData.id, token);
-                        if(type == "private" && id) {
-                            fetchReceiverData(id);                         
+                        if (type == "private" && id) {
+                            fetchReceiverData(id);
                             fetchPrivateChatHistory(userData.id, id, token);
                             // fetchChatroomStatus(userData.id, id, token);
                         }
                     }
-                    
+
                 }
                 else {
                     navigate("/auth/login");
@@ -86,7 +90,7 @@ const Chatroom = () => {
                 console.error(err);
                 navigate("/auth/login");
             })
-        
+
     }
 
     
@@ -150,6 +154,8 @@ const Chatroom = () => {
             id: responseData.id,
             username: responseData.username,
             avatar: responseData.avatar,
+            status: responseData.status || "Online",
+            thinking: responseData.thinking
 
         }))
         

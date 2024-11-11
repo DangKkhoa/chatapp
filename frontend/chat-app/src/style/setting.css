@@ -1,0 +1,37 @@
+.setting-container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+.setting-user-data {
+    display: flex;
+    column-gap: 15px;
+}
+
+.setting-user-data .setting-avatar-container {
+    width: 300px;
+    height: 300px
+}
+
+.setting-user-data .setting-input-container {
+    flex-grow: 1;
+}
+
+.setting-user-data .setting-input-container div {
+    margin-bottom: 10px;
+}
+
+.setting-user-data .setting-input-container div input {
+    border: none;
+    border-bottom: 1px solid gray;
+    border-radius: 0;
+
+}
+
+
+
+button {
+
+    padding: 10px 0;
+}

@@ -29,11 +29,7 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    private String[] avatars = {
-            "user_1", "user_2", "user_3",
-            "user_4", "user_5", "user_6",
-            "user_7"
-    };
+
 
     @PostMapping("/register")
     @ResponseBody
@@ -59,13 +55,12 @@ public class AuthController {
                 return new CustomResponse(4, "Email address has already been used");
             }
 
-            String userAvatar = avatars[(int)(Math.random() * avatars.length)];
 
             User newUser = new User();
             newUser.setEmail(user.getEmail());
             newUser.setUsername(user.getUsername());
             newUser.setPassword(user.getPassword());
-            newUser.setAvatar(userAvatar);
+
             User userToBeSaved = userService.registerUser(newUser);
             if(userToBeSaved == null) {
                 return new CustomResponse(5, "Something went wrong");

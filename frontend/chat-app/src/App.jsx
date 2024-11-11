@@ -11,6 +11,7 @@ import {
   useParams,
 } from "react-router-dom";
 import PrivateChats from "./component/chat/PrivateChats";
+import Setting from "./component/Setting";
 
 const ProtectedChatroom = () => {
   const { type, id } = useParams();
@@ -46,7 +47,8 @@ const router = createBrowserRouter([
     element: <Chatroom />
   },
   {
-    path: "/online-users"
+    path: "/setting",
+    element: <Setting />
   }
 
 ]);

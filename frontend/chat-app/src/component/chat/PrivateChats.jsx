@@ -20,8 +20,8 @@ const PrivateChats = ({
 
     return (
         <>
-            <div className="chat-header">
-                {receiverData.id != 0 && <div className="chat-information">
+            {receiverData.id && <div className="chat-header">
+                <div className="chat-information">
                     <div style={{ width: "50px", height: "50px" }}>
                         <UserAvatar avatar={receiverData.avatar} />
                     </div>
@@ -30,11 +30,11 @@ const PrivateChats = ({
                         {receiverData.username && <div className="chat-name">{receiverData.username}</div>}
                         <div className="chat-status">{status}</div>
                     </div>
-                </div>}
+                </div>
                 <div className="chat-setting">
 
                 </div>
-            </div>
+            </div>}
             <ul className="chat-messages" ref={messageEndRef}>
                 {console.log(privateChats)}
                 {isDeleted && <h1>{deletedMessage}</h1>}
@@ -48,23 +48,18 @@ const PrivateChats = ({
                                 <div className="sender-name">{chat.senderName}</div>
                                 {splitIntoLines(chat.message, 50)}
                             </div>
-                            {chat.senderId == userData.id && <div className="avatar self" >
+                            {/* {chat.senderId == userData.id && <div className="avatar self" >
                                 <UserAvatar avatar={userData.avatar} />
-                            </div>}
+                            </div>} */}
                         </div>
-
-
                     </li>
 
                 )))}
 
 
 
-                {/* <div ref={messageEndRef} /> */}
             </ul>
 
-
-            {/* {accepted.has(userData.id) && console.log(accepted)} */}
             {accepted ? <div className="send-message-container">
 
                 <InputField

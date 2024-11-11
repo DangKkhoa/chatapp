@@ -35,9 +35,9 @@ ul {
 }
 
 .no-user-online {
+    width: 100%;
     text-align: center;
     color: rgb(171, 171, 171);
-    font-weight: bold;
 
 }
 
@@ -57,9 +57,9 @@ ul {
     height: fit-content;
     flex-shrink: 0;
     text-align: center;
-    /* display: inline; */
     position: relative;
     transition-duration: .3s;
+    font-weight: bold;
 }
 
 .online-users .user:hover {

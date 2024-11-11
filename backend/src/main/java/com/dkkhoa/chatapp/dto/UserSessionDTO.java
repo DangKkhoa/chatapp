@@ -5,18 +5,38 @@ public class UserSessionDTO {
     private String email;
     private String username;
     private String avatar;
+    private String status;
+    private String thinking;
 
     public UserSessionDTO() {}
 
-    public UserSessionDTO(int id, String email, String username, String avatar) {
+    public UserSessionDTO(int id, String email, String username, String avatar, String status, String thinking) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.avatar = avatar;
+        this.status = status;
+        this.thinking = thinking;
     }
 
     public int getId() {
         return id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getThinking() {
+        return thinking;
+    }
+
+    public void setThinking(String thinking) {
+        this.thinking = thinking;
     }
 
     public void setId(int id) {
@@ -50,11 +70,13 @@ public class UserSessionDTO {
 
     @Override
     public String toString() {
-        return "{" +
-                "id: " + id +
-                ", email: " + email +
-                ", username: " + username +
-                ", avatar: " + avatar +
+        return "UserSessionDTO{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", status='" + status + '\'' +
+                ", thinking='" + thinking + '\'' +
                 '}';
     }
 }

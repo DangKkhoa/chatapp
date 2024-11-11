@@ -14,7 +14,8 @@ const OnlineUsers = ({ onlineUsers, userData, handleClick }) => {
                             <UserAvatar avatar={user.avatar} />
                         </div>
                         <div className="online-sign"></div>
-                        {user.username}
+                        {/* <span>Online</span> */}
+                        <span>{user.username}</span>
                     </div>
                 ))}
             </div>}
