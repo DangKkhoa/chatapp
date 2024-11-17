@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import ChatAcceptPending from "./ChatAcceptPending";
+import ChatPending from "./ChatPending";
 import InputField from "./InputField";
 import UserAvatar from "./UserAvatar";
+import Message from "./Message";
+import ChatHeader from "./ChatHeader";
+import DeletedMessage from "./DeletedMessage";
 
 const PrivateChats = ({
     id, privateChats, userData, splitIntoLines,
@@ -20,7 +23,8 @@ const PrivateChats = ({
 
     return (
         <>
-            {receiverData.id && <div className="chat-header">
+            {/* Display name and status of chat */}
+            {/* {receiverData.id && <div className="chat-header">
                 <div className="chat-information">
                     <div style={{ width: "50px", height: "50px" }}>
                         <UserAvatar avatar={receiverData.avatar} />
@@ -34,31 +38,28 @@ const PrivateChats = ({
                 <div className="chat-setting">
 
                 </div>
-            </div>}
-            <ul className="chat-messages" ref={messageEndRef}>
+            </div>} */}
+
+            {receiverData.id && 
+                <ChatHeader 
+                    receiverName={receiverData.username}
+                    receiverImg={receiverData.avatar}
+                    status={status} />
+            }
+
+            {isDeleted && <DeletedMessage />}
+
+            {/* Display chat messages */}
+            <div className="chat-messages" ref={messageEndRef}>
                 {console.log(privateChats)}
-                {isDeleted && <h1>{deletedMessage}</h1>}
+                
                 {privateChats.get(`${id}`) && (privateChats.get(`${id}`).map((chat, index) => (
-                    <li className="message" key={index + 1}>
-                        <div className={`${chat.senderId != userData.id ? "guest" : "self"}`}>
-                            {chat.senderId != userData.id && <div className={`avatar guest`} style={{ backgroundColor: chat.senderAvatarColor }}>
-                                <UserAvatar avatar={chat.senderAvatar} />
-                            </div>}
-                            <div className="message-data">
-                                <div className="sender-name">{chat.senderName}</div>
-                                {splitIntoLines(chat.message, 50)}
-                            </div>
-                            {/* {chat.senderId == userData.id && <div className="avatar self" >
-                                <UserAvatar avatar={userData.avatar} />
-                            </div>} */}
-                        </div>
-                    </li>
-
+                    <Message 
+                        chat={chat} 
+                        userData={userData} 
+                        splitIntoLines={splitIntoLines}/>
                 )))}
-
-
-
-            </ul>
+            </div>
 
             {accepted ? <div className="send-message-container">
 
@@ -71,7 +72,7 @@ const PrivateChats = ({
 
             </div>
                 :
-                <ChatAcceptPending isDeleted={isDeleted} receiverName={receiverData.username} />
+                <ChatPending isDeleted={isDeleted} receiverName={receiverData.username} />
             }
         </>
     );

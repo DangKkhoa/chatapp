@@ -1,0 +1,71 @@
+.send-message-container {
+    padding: 5px
+}
+
+
+.send-message {
+    /* flex: 1; */
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    box-sizing: border-box;
+    border: 1px solid #dcdcdc;
+    border-radius: 25px;
+    justify-content: center;
+    position: relative
+}
+
+
+.send-message .emoji-picker {
+    position: absolute;
+    z-index: 100000;
+    bottom: 50px;
+    left: 0;
+}
+
+.send-message .emoji-toggle {
+    background-color: transparent;
+    border: none;
+    font-size: 1.2rem
+}
+
+.send-message .emoji-toggle:hover {
+    cursor: pointer;
+    
+}
+
+.send-message .input-message {
+    flex: 1;
+    /* direction: ltr; */
+    max-height: 100px;
+    margin-right: 5px;
+    padding: 0 8px;
+    /* padding: 100px; */
+    border: none;
+    outline: none;
+    overflow-y: auto;
+    word-break: break-all;
+    /* background-color: #f3f4f5; */
+}
+
+[contenteditable=true]:empty::before {
+    content: attr(placeholder);
+    pointer-events: none;
+    display: block;
+    color: grey
+}
+
+
+
+.send-button {
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #0866ff
+}
+
+.send-button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}

@@ -378,78 +378,32 @@ ul {
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    /* background-color: #ffc0cb; */
+}
+
+.deleted-alert {
+    text-align: center;
+
     
 }
 
+.deleted-alert h2 {
+    font-size: 2.5rem;
+}
 
-.send-message-container {
-    padding: 5px
+.deleted-alert a {
+    background-color: rgb(230, 230, 230);
+    padding: 20px;
+    text-decoration: none;
+    color: black
+}
+
+.deleted-alert a:hover {
+    text-decoration: underline;
+    background-color: rgb(200, 200, 200);
 }
 
 
-.send-message {
-    /* flex: 1; */
-    width: 100%;
-    display: flex;
-    padding: 2px 10px;
-    box-sizing: border-box;
-    border: 1px solid #dcdcdc;
-    border-radius: 25px;
-    justify-content: center;
-    position: relative
-}
 
 
-.send-message .emoji-picker {
-    position: absolute;
-    z-index: 100000;
-    bottom: 50px;
-    left: 0;
-}
-
-.send-message .emoji-toggle {
-    background-color: transparent;
-    border: none;
-    font-size: 1.2rem
-}
-
-.send-message .emoji-toggle:hover {
-    cursor: pointer;
-    
-}
-
-.send-message .input-message {
-    flex: 1;
-    /* direction: ltr; */
-    max-height: 100px;
-    margin-right: 5px;
-    padding: 12px 8px 12px 15px;
-    /* padding: 100px; */
-    border: none;
-    outline: none;
-    overflow-y: auto;
-    word-break: break-all;
-    /* background-color: #f3f4f5; */
-}
-
-[contenteditable=true]:empty:before {
-    content: attr(placeholder);
-    pointer-events: none;
-    display: block;
-    color: grey
-}
-
-.send-button {
-    background-color: transparent;
-    border: none;
-    font-size: 1.5rem;
-    color: #0866ff
-}
-
-.send-button:hover {
-    cursor: pointer;
-    transform: scale(1.1);
-}
 
 

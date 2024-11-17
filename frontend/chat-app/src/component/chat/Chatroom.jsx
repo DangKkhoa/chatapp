@@ -466,17 +466,6 @@ const Chatroom = () => {
             <OnlineUsers onlineUsers={onlineUsers} userData={userData} handleClick={handleClick}/>
             {token ? <div className="chat-box">
                 <div className="member-list">
-                    {/* {onlineUsers.length > 1 && <ul className="online-users">
-                        {onlineUsers.filter(user => user.username !== userData.username).map((user) => (
-                            <li onClick={() => handleClick("private", user.id)} className="user"  key={user.id}>
-                                <div className="user-color" style={{backgroundColor: `${user.avatarColor}`, color: user.avatarColor}}></div>
-                                <div className="online-sign"></div>
-                                {user.username}
-                            </li>
-                        ))}
-                    </ul>} */}
-
-                    
                     <ul className="chat-users">
                         <li onClick={() => handleClick("public", 1, "Chatroom")} className="member" key={1}>
                             <div>

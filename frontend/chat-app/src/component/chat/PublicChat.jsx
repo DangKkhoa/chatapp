@@ -1,32 +1,30 @@
 import ChatHeader from "./ChatHeader";
 import UserAvatar from "./UserAvatar";
 import InputField from "./InputField";
+import Message from "./Message";
 
 
 const PublicChat = ({ publicChats, messageEndRef, 
                     splitIntoLines, userData, 
                     setUserData, sendPublicMessage }) => {
+    
+    
     return (
         <>
-            <ChatHeader chatName="Chatroom" status="Online" />
+            <ChatHeader 
+                receiverName="Chatroom" 
+                status="Online" 
+                receiverImg="Quickchat"/>
+
             <div className="chat-messages" ref={messageEndRef}>
                 {console.log(publicChats)}
 
                 {publicChats.map((chat, index) => (
-                    <div className="message" key={index}>
-                        <div className={`${chat.senderId != userData.id ? "guest" : "self"}`}>
-                            {chat.senderId !== userData.id && <div className={`avatar guest`} style={{}}>
-                                <UserAvatar avatar={chat.senderAvatar} />
-                            </div>}
-                            <div className="message-data">
-                                <div className="sender-name">{chat.senderName}</div>
-                                {splitIntoLines(chat.message, 50)}
-                            </div>
-                        </div>
-                    </div>
+                    <Message 
+                        chat={chat} 
+                        userData={userData} 
+                        splitIntoLines={splitIntoLines}/>
                 ))}
-
-                {/* <div ref={messageEndRef} /> */}
             </div>
             <InputField
                 sendFunction={sendPublicMessage}

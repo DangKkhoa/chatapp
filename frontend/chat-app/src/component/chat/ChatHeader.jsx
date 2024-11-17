@@ -1,11 +1,14 @@
+import UserAvatar from "./UserAvatar";
 
-const ChatHeader = ({ chatName, status }) => {
+const ChatHeader = ({ receiverName, receiverImg, status }) => {
     return(
         <div className="chat-header">
             <div className="chat-information">
-                <div className="chat-image"></div>
+                <div style={{ width: "50px", height: "50px" }}>
+                    <UserAvatar avatar={receiverImg} />
+                </div>
                 <div>
-                    <p className="chat-name">{chatName}</p>
+                    <p className="chat-name">{receiverName}</p>
                     <p className="chat-status">{status}</p>
                 </div>
             </div>

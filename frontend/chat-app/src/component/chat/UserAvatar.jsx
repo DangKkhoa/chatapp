@@ -6,7 +6,7 @@ const UserAvatar = ({ avatar }) => {
         backgroundImage: `url(/src/assets/${avatar}.jpg)`,
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        backgroundSize: "contain"
+        backgroundSize: "cover"
     };
 
     

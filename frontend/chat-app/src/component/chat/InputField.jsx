@@ -2,6 +2,8 @@ import EmojiPicker from "emoji-picker-react";
 import { useEffect, useRef, useState } from "react";
 import ContentEditable from 'react-contenteditable'
 
+import "../../style/InputField.css"
+
 const InputField = ({ sendFunction, userData, setUserData }) => {
     const [emojiPickerVisible, setEmojiPickerVisible] = useState(false);
     const [isMessageTooLong, setIsMessageTooLong] = useState(false);
@@ -83,7 +85,7 @@ const InputField = ({ sendFunction, userData, setUserData }) => {
                     // value={userData.message}
                     html={editableRef.current}
                     onChange={(e) => handleInputMessage(e)}
-                    // contentEditable="true"
+                    contentEditable="true"
                     // ref={editableRef} 
                     />
                     
