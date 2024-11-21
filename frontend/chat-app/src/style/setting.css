@@ -1,9 +1,65 @@
+* {
+    font-size: 1rem;
+}
+
 .setting-container {
+    position: relative;
     padding: 20px;
     display: flex;
     flex-direction: column;
     row-gap: 10px;
 }
+
+.setting-container .update {
+    /* width: fit-content; */
+    position: absolute;
+    right: 10px;
+    z-index: 10;
+    color: white;
+    border-radius: 10px;
+    padding: 10px 15px;
+    box-shadow: 1px 1px 10px rgb(168, 168, 168);
+}
+
+.setting-container .update p {
+    padding: 0;
+    margin: 0 0 20px 0;
+
+}
+
+.setting-container .update.failed {
+    background-color: #ef5350;
+}
+
+.setting-container .update.success {
+    background-color: #5bb450;
+}
+
+.setting-container .update button {
+    color: white;
+    padding: 5px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.setting-container .update button.success {
+    background-color: #6bcc5e;
+}
+
+.setting-container .update button.failed {
+    background-color: #e57373;
+}
+
+.setting-container .update button.success:hover {
+    background-color: #73c069;
+}
+
+.setting-container .update button.failed:hover {
+    background-color: #d32f2f;
+}
+
+
 .setting-user-data {
     display: flex;
     column-gap: 15px;
@@ -22,6 +78,11 @@
     margin-bottom: 10px;
 }
 
+.setting-user-data .setting-input-container div label {
+    display: block;
+    font-weight: 500;
+}
+
 .setting-user-data .setting-input-container div input {
     border: none;
     border-bottom: 1px solid gray;
@@ -30,8 +91,19 @@
 }
 
 
-
-button {
-
-    padding: 10px 0;
+.save-btn {
+    padding: 15px 0;
+    border: none;
+    background-color: #5bb450;
+    color: white;
+    font-size: 1rem;
+    border-radius: 50px;
 }
+
+.save-btn:hover {
+    cursor: pointer;
+    background-color: #4e9944;
+}
+
+
+

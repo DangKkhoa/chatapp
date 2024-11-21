@@ -23,41 +23,29 @@ const PrivateChats = ({
 
     return (
         <>
-            {/* Display name and status of chat */}
-            {/* {receiverData.id && <div className="chat-header">
-                <div className="chat-information">
-                    <div style={{ width: "50px", height: "50px" }}>
-                        <UserAvatar avatar={receiverData.avatar} />
-                    </div>
-
-                    <div>
-                        {receiverData.username && <div className="chat-name">{receiverData.username}</div>}
-                        <div className="chat-status">{status}</div>
-                    </div>
-                </div>
-                <div className="chat-setting">
-
-                </div>
-            </div>} */}
-
             {receiverData.id && 
                 <ChatHeader 
                     receiverName={receiverData.username}
                     receiverImg={receiverData.avatar}
-                    status={status} />
+                    status={receiverData.status} 
+                    thinking={receiverData.thinking}
+                    borderColor={receiverData.borderColor} />
             }
 
             {isDeleted && <DeletedMessage />}
 
             {/* Display chat messages */}
             <div className="chat-messages" ref={messageEndRef}>
-                {console.log(privateChats)}
+                {/* {console.log(privateChats)} */}
                 
-                {privateChats.get(`${id}`) && (privateChats.get(`${id}`).map((chat, index) => (
+                {privateChats.has(`${id}`) && (privateChats.get(`${id}`).map((chat, index) => (
+                    
                     <Message 
                         chat={chat} 
-                        userData={userData} 
-                        splitIntoLines={splitIntoLines}/>
+                        userData={userData}
+                        // receiverData={receiverData} 
+                        splitIntoLines={splitIntoLines}
+                        key={index}/>
                 )))}
             </div>
 

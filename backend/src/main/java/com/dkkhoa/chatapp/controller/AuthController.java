@@ -3,6 +3,7 @@ package com.dkkhoa.chatapp.controller;
 
 import com.dkkhoa.chatapp.dto.CustomResponse;
 import com.dkkhoa.chatapp.dto.UserSessionDTO;
+import com.dkkhoa.chatapp.mapper.UserMapper;
 import com.dkkhoa.chatapp.model.User;
 import com.dkkhoa.chatapp.dto.UserRegistrationDTO;
 import com.dkkhoa.chatapp.service.UserService;
@@ -120,11 +121,7 @@ public class AuthController {
             System.out.println("Line 27");
             User user = userService.getUserByEmail(email);
 
-            UserSessionDTO userSessionDTO = new UserSessionDTO();
-            userSessionDTO.setId(user.getId());
-            userSessionDTO.setEmail(user.getEmail());
-            userSessionDTO.setUsername(user.getUsername());
-            userSessionDTO.setAvatar(user.getAvatar());
+            UserSessionDTO userSessionDTO = UserMapper.toUserSessionDTO(user);
             return new CustomResponse(10, token, userSessionDTO);
         }
         catch (Exception e) {

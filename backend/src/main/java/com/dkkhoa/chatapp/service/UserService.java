@@ -46,21 +46,63 @@ public class UserService {
     }
 
     public User getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email);
-        return user;
+        return userRepository.findByEmail(email);
     }
 
 
 
     public  boolean userExists(String email) {
         User user = userRepository.findByEmail(email);
-        if(user != null) {
-            return true;
-        }
-        return false;
+        return user != null;
     }
 
     public User getUserById(int id) {
         return userRepository.findById(id);
+    }
+
+    public User updateUser(User userToUpdate) {
+        User existingUser = userRepository.findById(userToUpdate.getId());
+        boolean isUpdated = false;
+
+        if(existingUser == null) {
+            return null;
+        }
+
+        if(userToUpdate.getUsername() != null && !userToUpdate.getUsername().equals(existingUser.getUsername())) {
+            existingUser.setUsername(userToUpdate.getUsername());
+            isUpdated = true;
+        }
+
+        if(userToUpdate.getAvatar() != null && !userToUpdate.getAvatar().equals(existingUser.getAvatar())) {
+            existingUser.setAvatar(userToUpdate.getAvatar());
+            isUpdated = true;
+        }
+
+        if(userToUpdate.getStatus() != null && !userToUpdate.getStatus().equals(existingUser.getStatus())) {
+            existingUser.setStatus(userToUpdate.getStatus());
+            isUpdated = true;
+        }
+
+        if(userToUpdate.getThinking() != null && !userToUpdate.getThinking().equals(existingUser.getThinking())) {
+            existingUser.setThinking(userToUpdate.getThinking());
+            isUpdated = true;
+        }
+
+        if(userToUpdate.getBorderColor() != null && !userToUpdate.getBorderColor().equals(existingUser.getBorderColor())) {
+            existingUser.setBorderColor(userToUpdate.getBorderColor());
+            isUpdated = true;
+        }
+
+        if(isUpdated) {
+            return userRepository.save(existingUser);
+        }
+
+        return existingUser;
+
+
+
+
+
+
     }
 }

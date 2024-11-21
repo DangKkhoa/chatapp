@@ -2,57 +2,38 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import "../style/setting.css"
 import UserAvatar from "./chat/UserAvatar";
+import { verifyToken } from "../js/verifyToken";
+import { HexColorPicker } from "react-colorful";
+
 const Setting = () => {
     const token = localStorage.getItem("jwtToken") || sessionStorage.getItem("jwtToken");
+    const [color, setColor] = useState("");
+    const [updateMessage, setUpdateMessage] = useState("");
+    const [isSuccess, setIsSuccess] = useState();
     const [userData, setUserData] = useState({
         id: 0,
-        username: "jjjjj",
+        email: "",
+        username: "",
         avatar: "",
-        status: "",
-        thinking: ""
+        status: "online",
+        thinking: "",
+        borderColor: ""
     })
 
-    const [newAvatar, setNewAvatar] = useState("");
+    
+
+    
     useEffect(() => {
-        verifyToken(token)
+        verifyToken(token, setUserData)
     }, [])
-    const verifyToken = (token) => {
-        axios.get("http://localhost:8080/auth/jwt-verify", {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        })
-            .then(response => {
-                const responseData = response.data;
-                if (responseData.code === 10) {
-                    const user = responseData.userSessionDTO;
-                    console.log(user.avatarColor);
-                    setUserData(userData => ({
-                        ...userData,
-                        username: user.username,
-                        id: user.id,
-                        avatar: user.avatar
-                    }))
-                }
-                else {
-                    navigate("/auth/login");
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                navigate("/auth/login");
-            })
-
+    
+    const handleBorderColorChange = (color) => {
+        setColor(color);
+        setUserData(prevUserData => ({
+            ...prevUserData,
+            borderColor: color
+        }))
     }
-
-    const avatarStyle = {
-        backgroundImage: `url(/src/assets/${userData.avatar}.jpg)`,
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "contain",
-        width: "100%",
-        height: "100%"
-    };
 
     const changeAvatar = () => {
         const avatars = [
@@ -73,51 +54,114 @@ const Setting = () => {
         console.log(name + ": " + value);
         setUserData(prevUserData => ({
             ...prevUserData,
-            [name]: [value]
+            [name]: value
         }))
+
     }
 
     const handleSaveClick = () => {
-        axios.post("http://localhost:8080/user/update", {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            },
-            userData
+        axios.post(
+            "http://localhost:8080/user/update", 
+            userData,
+            {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }
+        )
+        .then(response => {
+            const responseData = response.data;
+            if(responseData.code == 1) {
+              setIsSuccess(true);
+            }
+            else {
+              setIsSuccess(false);
+            }
+            setUpdateMessage(responseData.message);
         })
     }
 
+    const onCloseButtonClick = () => {
+      setUpdateMessage("");
+    }
+
+    
+
     return (
-        <div className="setting-container">
-            <div>
-                <button className="go-back">Go back</button>
-            </div>
-            <div className="setting-user-data">
-                <div className="setting-avatar-container" onClick={changeAvatar}>
-                    <UserAvatar avatar={userData.avatar} />
-                </div>
-                <div className="setting-input-container">
-                    <div className="">
-                        Display name:
-                        <input type="text" name="username" value={userData.username} onChange={handleUserDataChange}/>
-                    </div>
-                    <div>
-                        What are you thinking?
-                        <input type="text" name="thinking" onChange={handleUserDataChange}/>
-                    </div>
-                    <div>
-                        Status
-                        <select name="status" id="" onChange={handleUserDataChange} defaultValue="want_to_chat">
-                            <option value="online">Online</option>
-                            <option value="busy">Busy</option>
-                            <option value="tired">Tired</option>
-                            <option value="want_to_chat">Want to chat</option>
-                        </select>
-                    </div>
-                    
-                </div>
-            </div>
-            <button onClick={handleSaveClick}>Save</button>
+      <div className="setting-container">
+        {updateMessage && <div className={`update ${isSuccess ? "success" : "failed"}`}>
+          <p>
+            {updateMessage} {isSuccess ? <i class="fa-regular fa-face-smile-wink"></i> : <i class="fa-regular fa-face-frown"></i>} 
+          </p>
+          <button onClick={onCloseButtonClick} className={`${isSuccess ? "success" : "failed"}`}>Ok</button>
+        </div>}
+        <div>
+          <button className="go-back">Go back</button>
         </div>
+        <div className="setting-user-data">
+          <div className="setting-avatar-container" onClick={changeAvatar}>
+            <UserAvatar avatar={userData.avatar} borderColor={userData.borderColor} />
+          </div>
+          <div className="setting-input-container">
+          <div className="" >
+              <label htmlFor="email">
+                Email
+              </label>
+              <input
+                type="text"
+                name="email"
+                value={userData.email}
+                style={{opacity: ".6"}}
+                readOnly />
+            </div>
+            <div className="">
+              <label htmlFor="name">
+                Display name <span style={{color: "gray", fontSize: ".8rem"}}>{userData.username.length} / 30</span>
+              </label>
+              <input
+                type="text"
+                name="username"
+                value={userData.username}
+                onChange={handleUserDataChange} />
+            </div>
+            <div>
+              <label htmlFor="thinking">
+                Share your thought <span style={{color: "gray", fontSize: ".8rem"}}>{userData.thinking.length} / 30</span>
+              </label>
+              <input
+                type="text"
+                name="thinking"
+                value={userData.thinking || ""}
+                onChange={handleUserDataChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="status">
+                Status
+              </label>
+              <select
+                name="status"
+                id=""
+                onChange={handleUserDataChange}
+                value={userData.status || ""}
+              >
+                <option value="online">Online</option>
+                <option value="busy">Busy</option>
+                <option value="tired">Tired</option>
+                <option value="want_to_chat">Want to chat</option>
+              </select>
+            </div>
+            <div className="border-color-pickers">
+                Choose border color: 
+                <HexColorPicker color={userData.borderColor} onChange={(color) => handleBorderColorChange(color)} style={{width: "100%"}}/>
+                
+            </div>
+          </div>
+        </div>
+        <button onClick={handleSaveClick} className="save-btn">
+          Save
+        </button>
+      </div>
     );
 }
 

@@ -38,11 +38,6 @@ const InputField = ({ sendFunction, userData, setUserData }) => {
     
     }
 
-    const handleEnterKey = (e) => {
-        if(e.key === "Enter") {
-            sendMessage();
-        }
-    }
 
     const sendMessage = () => {
         if(userData.message.length > MESSAGE_MAX_LENGTH) {
@@ -81,7 +76,7 @@ const InputField = ({ sendFunction, userData, setUserData }) => {
                 <ContentEditable 
                     className="input-message" 
                     // name="message"
-                    placeholder="Message..."
+                    placeholder={userData.message != "" ? "" : "Message..."}
                     // value={userData.message}
                     html={editableRef.current}
                     onChange={(e) => handleInputMessage(e)}

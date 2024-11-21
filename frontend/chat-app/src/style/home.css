@@ -1,3 +1,6 @@
+* {
+    font-size: 1.5rem;
+}
 body {
     margin: 0;
     padding: 0;
@@ -24,7 +27,6 @@ ul {
     padding: 0;
 }
 
-
 .online-users-container {
     position: relative;
     width: 100%;
@@ -44,16 +46,15 @@ ul {
 
 .online-users {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     padding: 10px;
     overflow-x: auto;
     height:fit-content;
-
-    /* flex-wrap: nowrap; */
+    
 }
 
 .online-users .user {
-    width: 50px;
+    width: fit-content;
     height: fit-content;
     flex-shrink: 0;
     text-align: center;
@@ -67,7 +68,7 @@ ul {
     cursor: pointer;
 }
 
-.user-color {
+.user-avatar {
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -79,11 +80,15 @@ ul {
     width: 10px;
     height: 10px;
     background-color: #00d700;
-    position: absolute;
-    right: 5px;
-    bottom: 20px;
+    position: relative;
+    left: 40px;
+    bottom: 15px;
     border-radius: 50%;
 }
+
+
+
+
 
 
 .chat-box {
@@ -123,7 +128,7 @@ ul {
     justify-content: space-between;
     padding: 15px 10px;
     margin: 5px;
-    font-size: 1.2rem;
+    /* font-size: 1.2rem; */
     transition-duration: .3s;
     color: black;
     border-radius: 5px;
@@ -133,6 +138,11 @@ ul {
 .member:hover {
     cursor: pointer;
     background-color: #f2f2f2;
+}
+
+.member .name-and-message {
+    overflow: hidden;
+    margin-right: 10px;
 }
 
 .member .delete-chat-button {
@@ -190,7 +200,7 @@ ul {
     cursor: pointer;
     background-color: #f2f2f2;
 }
- .setting-detail {
+ .setting-options {
     background-color: white;
     position: absolute;
     padding: 10px;
@@ -204,7 +214,7 @@ ul {
     border-radius: 8px;
 }
 
-.setting-detail div {
+.setting-options div {
     padding: 10px;
     display: block;
     text-decoration: none;
@@ -219,7 +229,7 @@ ul {
     border-radius: 0px 0px 10px 10px;
 } */
 
-.setting-detail div:hover {
+.setting-options div:hover {
     cursor: pointer;
     background-color: #f2f2f2;
 }
@@ -282,9 +292,6 @@ ul {
     margin-right: 5px;
 }
 
-.user-join-noti {
-    
-}
 
 .chat-messages {
     flex-grow: 1;
@@ -301,9 +308,8 @@ ul {
     width: 100%;
     /* border-radius: 8px; */
     clear: both;
-    /* margin-bottom: 10px; */
     word-wrap: break-word;
-    padding: 10px 0;
+    padding: 15px 0;
     /* height: fit-content; */
 }
 
@@ -325,8 +331,17 @@ ul {
     display: none;
 }
 
+
+
+
+.message .self {
+    float: right;
+    text-align: right;
+    /* padding-right: 20px; */
+}
+
 .message-data {
-    margin: 0 5px;
+    /* margin: 0 5px; */
     padding: 10px;
     border-radius: 8px;
     word-wrap: break-word;
@@ -336,12 +351,10 @@ ul {
     /* white-space-collapse:break-spaces ; */
 }
 
-
-.message .self {
-    float: right;
-    text-align: right;
-    /* padding-right: 20px; */
+.message-data span {
+    display: block;
 }
+
 
 .message .self .message-data {
     background-color: #1778FF;
@@ -351,7 +364,7 @@ ul {
 
 .sender-name {
     margin-bottom: 5px;
-    font-size: .8rem;
+    /* font-size: .8rem; */
     font-weight: bold;
 }
 
@@ -364,6 +377,8 @@ ul {
     text-align: left;
 }
 
+
+
 .message .guest .message-data {
     background-color: #f0f0f0;
     padding-right: 20px;
@@ -374,10 +389,26 @@ ul {
 
 }
 
-.avatar {
+.message-time {
+    font-size: .8rem;
+    color: rgb(170, 170, 170)
+}
+
+.message .guest + .message-time {
+    float: left;
+    margin-left: 10px;
+}
+
+.message .self + .message-time {
+    float: right;
+    margin-right: 10px;
+}
+
+.avatar.guest {
     width: 30px;
     height: 30px;
     border-radius: 50%;
+    margin-right: 5px;
 }
 
 .deleted-alert {

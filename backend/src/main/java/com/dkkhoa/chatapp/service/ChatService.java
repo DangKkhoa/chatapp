@@ -61,13 +61,13 @@ public class ChatService {
 
     public Message storePrivateMessage(Message message) {
 
-        String chatroomId = generatePrivateChatroom(message.getSenderId(), message.getReceiverId());
+        String chatroomId = generatePrivateChatroom(message.getSender().getId(), message.getReceiver().getId());
         System.out.println("chatroomId: " + chatroomId);
         Chatroom privateChatroom = chatRepository.findByChatroomId(chatroomId);
 
 
         if(privateChatroom == null) {
-            Chatroom newPrivateChatroom = new Chatroom(chatroomId, false, message.getSenderId(), message.getReceiverId());
+            Chatroom newPrivateChatroom = new Chatroom(chatroomId, false, message.getSender().getId(), message.getReceiver().getId());
             chatRepository.save(newPrivateChatroom);
             message.setChatroom(newPrivateChatroom);
         }
@@ -75,7 +75,7 @@ public class ChatService {
             List<Message> messages = messageRepository.findAllByChatroom(privateChatroom);
             System.out.println(58);
             System.out.println(messages.get(0));
-            if(messages.get(0).getReceiverId() == message.getSenderId()) {
+            if(messages.get(0).getReceiver().getId() == message.getSender().getId()) {
                 privateChatroom.setAccepted(true);
                 chatRepository.save(privateChatroom);
 
@@ -93,30 +93,33 @@ public class ChatService {
         return messageRepository.findAllByChatroom(privateChatroom);
     }
 
-    public Map<String, String> getMessagesGroupedBySender(int userId) {
+    public Map<String, Map<String, Message>> getMessagesGroupedBySender(int userId) {
         List<Chatroom> chatrooms = chatRepository.findAllByUserId(userId);
 
 //        List<Message> messages = messageRepository.findAllMessagesSentToUser(userId);
-        Map<String, String> usersInChatroom = new HashMap<>();
+        Map<String, Message> usersInChatroom = new HashMap<>();
+        Map<String, Map<String, Message>> messagesOfUsersInChatroom = new HashMap<>();
         for(Chatroom chatroom : chatrooms) {
+            List<Message> messagesByChatroom = messageRepository.findAllByChatroom(chatroom);
+            Message lastMessage = messagesByChatroom.get(messagesByChatroom.size() - 1);
             int otherUserId = chatroom.getUser1() == userId ? chatroom.getUser2() : chatroom.getUser1();
             User otherUserData = userRepository.findById(otherUserId);
             // List<Message> messages = messageRepository.findAllBySenderIdAndReceiverId(otherUserId, userId);
             if(otherUserData != null) {
-                usersInChatroom.put(Integer.toString(otherUserData.getId()), otherUserData.getUsername());
-
+                usersInChatroom.put(otherUserData.getUsername(), lastMessage);
+                messagesOfUsersInChatroom.put(Integer.toString(otherUserData.getId()), usersInChatroom);
             };
         }
 
 
 
 
-        return usersInChatroom;
+        return messagesOfUsersInChatroom;
     }
 
 
     public ChatStatusResponse isAcceptedByReceiver(Message message) {
-        String chatroomId = generatePrivateChatroom(message.getSenderId(), message.getReceiverId());
+        String chatroomId = generatePrivateChatroom(message.getSender().getId(), message.getReceiver().getId());
         Chatroom chatroom = chatRepository.findByChatroomId(chatroomId);
         if (chatroom == null) {
             // simpMessagingTemplate.convertAndSendToUser(Integer.toString(receiverId), "/chat-availability", true);
@@ -124,16 +127,11 @@ public class ChatService {
         }
 //
         List<Message> messages = messageRepository.findAllByChatroom(chatroom);
-        if (messages.size() <= 2 && messages.get(0).getReceiverId() == message.getSenderId()) {
-                //simpMessagingTemplate.convertAndSend("/topic/chat-availability", true);
-//            simpMessagingTemplate.convertAndSendToUser(Integer.toString(message.getReceiverId()), "/chat-availability", true);
+        if (messages.size() <= 2 && messages.get(0).getReceiver().getId() == message.getSender().getId()) {
+
             return new ChatStatusResponse(2, true);
         }
-////        if(messages.get(0).getReceiverId() == senderId) return true;
-//        System.out.println(93);
-//        System.out.println(chatroom);
 
-        // simpMessagingTemplate.convertAndSendToUser(Integer.toString(senderId), "/chat-availability", chatroom.isAccepted());
         return new ChatStatusResponse(3, chatroom.isAccepted());
     }
 

@@ -60,13 +60,11 @@ const Register = () => {
                     navigate("/auth/login");
                 }
             }, 1000);
-
-            
         }
         
     }, [isSuccess])
 
-
+    
     return(
         <div className="container register" >
             
@@ -76,7 +74,6 @@ const Register = () => {
             {isSuccess && <div className="register-success">
                 User register successfully.
                 Redirecting in <span style={{color: "red"}}>{redirectingTime}</span>
-                
             </div>}
             <form id="register-form">
                 <h1>Create a new account</h1>

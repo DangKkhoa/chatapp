@@ -7,7 +7,7 @@ import ErrorBox from "./ErrorBox";
 const Button = (props) => {
     const [error, setError] = useState();
     const [isClicked, setIsClicked] = useState(false);
-    
+    const [isFailed, setIsFailed] = useState(false);
     const navigate = useNavigate();
 
     
@@ -23,6 +23,7 @@ const Button = (props) => {
             if(responseData.code != 1) {
                 console.log(responseData);
                 setError(responseData.message);
+                setIsFailed(true);
             }
             else {
                 if(props.type == "login") {
@@ -33,11 +34,12 @@ const Button = (props) => {
                         sessionStorage.setItem("jwtToken", responseData.message);
                     }
                     setIsClicked(true);
-                    
+                    setIsFailed(false);
                     navigate("/", { replace: true });
                 }
                 else {
                     setIsClicked(true);
+                    setIsFailed(false);
                     props.setIsSuccess(true);
                     //navigate("/auth/login", { replace: true });
                 }
@@ -55,7 +57,7 @@ const Button = (props) => {
 
     return(
         <>
-            <ErrorBox message={error}/>
+            {isFailed && <ErrorBox message={error}/>}
             <button type="submit" className={`btn ${props.type === "login" ? "submit-btn" : "register-btn"}`} onClick={handleSubmit}>
                 {!isClicked && (props.type == "login" ? "Login" : "Register")}
                 {isClicked && (props.type == "login" ? "Logging in..." : "Redirecting...")}

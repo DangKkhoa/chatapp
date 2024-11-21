@@ -1,4 +1,5 @@
 import UserAvatar from "./UserAvatar";
+// import "../../style/onlineUsers.css";
 
 const OnlineUsers = ({ onlineUsers, userData, handleClick }) => {
     
@@ -10,10 +11,11 @@ const OnlineUsers = ({ onlineUsers, userData, handleClick }) => {
                 {onlineUsers.filter(user => user.username !== userData.username).map((user) => (
                     <div onClick={() => handleClick("private", user.id)} className="user" key={user.id}>
                         {/* <div className="user-color" style={{ backgroundColor: `${user.avatarColor}`, color: user.avatarColor }}></div> */}
-                        <div style={{ width: "50px", height: "50px" }}>
-                            <UserAvatar avatar={user.avatar} />
+                        <div style={{ width: "50px", height: "50px", margin: "auto" }}>
+                            <UserAvatar avatar={user.avatar} borderColor={user.borderColor}/>
+                            <div className="online-sign"></div>
                         </div>
-                        <div className="online-sign"></div>
+                        
                         {/* <span>Online</span> */}
                         <span>{user.username}</span>
                     </div>

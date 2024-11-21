@@ -17,13 +17,14 @@ const PublicChat = ({ publicChats, messageEndRef,
                 receiverImg="Quickchat"/>
 
             <div className="chat-messages" ref={messageEndRef}>
-                {console.log(publicChats)}
+                {/* {console.log(publicChats)} */}
 
                 {publicChats.map((chat, index) => (
                     <Message 
                         chat={chat} 
                         userData={userData} 
-                        splitIntoLines={splitIntoLines}/>
+                        splitIntoLines={splitIntoLines}
+                        key={index}/>
                 ))}
             </div>
             <InputField

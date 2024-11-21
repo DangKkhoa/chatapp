@@ -1,20 +1,27 @@
 import UserAvatar from "./UserAvatar"
 
 const Message = ({ chat, userData, splitIntoLines }) => {
+    // console.log(chat)
+    const getHourAndMinute = (sentTime) => {
+        const [hour, minute] = sentTime.split(":");
+        
+        return `${hour > 12 ? hour - 12 : hour}:${minute} ${hour > 12 ? "PM" : "AM"}`;
+    }
+
     return (
         <div className="message">
-            <div className={`${chat.senderId != userData.id ? "guest" : "self"}`}>
-                {chat.senderId != userData.id && <div className={`avatar guest`} style={{ backgroundColor: chat.senderAvatarColor }}>
-                    <UserAvatar avatar={chat.senderAvatar} />
+
+            {chat && <div className={`${chat.sender.id != userData.id ? "guest" : "self"}`}>
+                {chat.sender.id != userData.id && <div className={`avatar guest`}>
+                    <UserAvatar avatar={chat.sender.avatar} />
                 </div>}
                 <div className="message-data">
-                    <div className="sender-name">{chat.senderName}</div>
-                    {splitIntoLines(chat.message, 50)}
+                    <span className="sender-name">{chat.sender.username}</span>
+                    <span className="message-content">{splitIntoLines(chat.message, 50)}</span>
                 </div>
-                {/* {chat.senderId == userData.id && <div className="avatar self" >
-                                <UserAvatar avatar={userData.avatar} />
-                            </div>} */}
-            </div>
+                
+            </div>}
+            <div className="message-time">{getHourAndMinute(chat.sentTime)}</div>
         </div>
     );
 }

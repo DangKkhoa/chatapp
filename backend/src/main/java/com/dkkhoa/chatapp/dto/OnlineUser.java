@@ -7,6 +7,7 @@ public class OnlineUser {
     private String username;
     private String avatar;
 
+
     public OnlineUser() {
     }
 

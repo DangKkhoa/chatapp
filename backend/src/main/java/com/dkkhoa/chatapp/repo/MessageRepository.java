@@ -12,10 +12,10 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
     public Message save(Message message);
     public List<Message> findAllByChatroom(Chatroom chatroom);
 
-    @Query("SELECT m FROM Message m WHERE ((m.senderId = :senderId AND m.receiverId = :receiverId) OR (m.senderId = :receiverId And m.receiverId = :senderId))")
+    @Query("SELECT m FROM Message m WHERE ((m.sender.id = :senderId AND m.receiver.id = :receiverId) OR (m.sender.id = :receiverId And m.sender.id = :senderId))")
     public List<Message> findAllBySenderIdAndReceiverId(@Param("senderId") int senderId,@Param("receiverId") int receiverId);
 
-    @Query("SELECT m FROM Message m WHERE (m.receiverId = :userId OR m.senderId = :userId)")
+    @Query("SELECT m FROM Message m WHERE (m.receiver.id = :userId OR m.sender.id = :userId)")
     public List<Message> findAllMessagesSentToUser(@Param("userId") int userId);
 
 

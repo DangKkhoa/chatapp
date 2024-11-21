@@ -7,16 +7,18 @@ public class UserSessionDTO {
     private String avatar;
     private String status;
     private String thinking;
+    private String borderColor;
 
     public UserSessionDTO() {}
 
-    public UserSessionDTO(int id, String email, String username, String avatar, String status, String thinking) {
+    public UserSessionDTO(int id, String email, String username, String avatar, String status, String thinking, String borderColor) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.avatar = avatar;
         this.status = status;
         this.thinking = thinking;
+        this.borderColor = borderColor;
     }
 
     public int getId() {
@@ -67,6 +69,13 @@ public class UserSessionDTO {
         this.avatar = avatar;
     }
 
+    public String getBorderColor() {
+        return borderColor;
+    }
+
+    public void setBorderColor(String borderColor) {
+        this.borderColor = borderColor;
+    }
 
     @Override
     public String toString() {
@@ -77,6 +86,12 @@ public class UserSessionDTO {
                 ", avatar='" + avatar + '\'' +
                 ", status='" + status + '\'' +
                 ", thinking='" + thinking + '\'' +
+                ", borderColor='" + borderColor + '\'' +
                 '}';
     }
 }
+
+
+
+
+

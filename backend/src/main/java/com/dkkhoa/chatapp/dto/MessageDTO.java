@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @Data
 @NoArgsConstructor
@@ -17,7 +19,7 @@ public class MessageDTO {
     private String receiverId;
     private String receiverName;
     private String message;
-    private String time;
+//    private LocalDate time;
     private Status status;
     private String token;
 
