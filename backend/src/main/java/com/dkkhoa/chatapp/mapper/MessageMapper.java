@@ -25,7 +25,9 @@ public class MessageMapper {
         message.setMessage(messageDTO.getMessage());
         message.setSentDate(LocalDate.now());
         message.setSentTime(LocalTime.now());
+
         if(messageDTO.getReceiverId() != null) {
+
             User receiver = userService.getUserById(Integer.parseInt(messageDTO.getReceiverId()));
             message.setReceiver(receiver);
         }

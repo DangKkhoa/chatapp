@@ -290,7 +290,7 @@ const Chatroom = () => {
         // setPrivateChats(prevMap => new Map(prevMap.set(`${payloadData.senderId}`, [...prevMap.get(`${payloadData.senderId}`), payloadData])));
         
         
-        setReceivedMessages(map => new Map(map.set(`${payloadData.sender.id}`, payloadData.sender.username)));
+        setReceivedMessages(map => new Map(map.set(`${payloadData.sender.id}`, {[payloadData.sender.username]: payloadData})));
         setIsNewMessage(true);
         setAccepted(true);
         setIsDeleted(false);
@@ -380,7 +380,7 @@ const Chatroom = () => {
                 
                 stompClient.current.send('/app/private-message', {}, JSON.stringify(chatMessage));
                 setUserData(prevUserData => ({...prevUserData, message: ""}));
-                setReceivedMessages(map => new Map(map.set(`${id}`, receiverData.username)))
+                setReceivedMessages(map => new Map(map.set(`${id}`, {[receiverData.username]: chatMessage})))
                 setIsNewMessage(true);
                 setIsDeleted(false);
 
@@ -566,19 +566,18 @@ const Chatroom = () => {
                           {/* <span>{receivedMessages.get(otherUserId).sender.username}</span> */}
                           {console.log(otherUserId)}
                           {receivedMessages.has(otherUserId) && <span>
-                                {Object.entries(receivedMessages.get(otherUserId))[0][0]}
+                                {Object.keys(receivedMessages.get(otherUserId))}
                             </span>}
-                          {privateChats.has(`${otherUserId}`) &&
-                            privateChats.get(`${otherUserId}`).length > 0 && (
+                          
                               <div className="new-message-preview">
                                 {
                                 //   privateChats.get(`${otherUserId}`)[
                                 //     privateChats.get(`${otherUserId}`).length - 1
                                 //   ].message
-                                
+                                Object.values(receivedMessages.get(otherUserId))[0].message
                                 }
                               </div>
-                            )}
+                            
                         </div>
 
                         <button

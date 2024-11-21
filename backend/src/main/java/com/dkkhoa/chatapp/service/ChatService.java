@@ -85,6 +85,8 @@ public class ChatService {
             message.setChatroom(privateChatroom);
         }
 
+        message.setSeen(false);
+
         return messageRepository.save(message);
     }
 

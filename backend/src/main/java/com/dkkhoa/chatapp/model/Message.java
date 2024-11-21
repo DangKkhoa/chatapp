@@ -37,6 +37,7 @@ public class Message {
     private LocalDate sentDate;
     private LocalTime sentTime;
     private Status status;
+    private boolean isSeen;
 
     @ManyToOne
     @JoinColumn(name = "chatroom_id", nullable = true)
