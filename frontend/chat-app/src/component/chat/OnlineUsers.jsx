@@ -1,3 +1,4 @@
+import { memo } from "react";
 import UserAvatar from "./UserAvatar";
 // import "../../style/onlineUsers.css";
 
@@ -26,4 +27,4 @@ const OnlineUsers = ({ onlineUsers, userData, handleClick }) => {
     );
 }
 
-export default OnlineUsers;
+export default memo(OnlineUsers);

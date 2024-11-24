@@ -106,8 +106,7 @@ ul {
 .member-list {
     flex: 2;
     position: relative;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: auto;
     background-color: white;
     /* color: #c4c6e7; */
     border-radius: 10px;

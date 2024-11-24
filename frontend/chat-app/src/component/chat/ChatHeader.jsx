@@ -1,6 +1,7 @@
 import UserAvatar from "./UserAvatar";
 
 const ChatHeader = ({ receiverName, receiverImg, status, thinking, borderColor }) => {
+
     return(
         <div className="chat-header">
             <div className="chat-information">

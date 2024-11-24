@@ -34,6 +34,7 @@ const Chatroom = () => {
         avatar: "",
         status: "",
         thinking: "",
+        lastLogin: "",
         borderColor: ""
     })
     
@@ -135,15 +136,17 @@ const Chatroom = () => {
     }
 
     const fetchReceiverData = async (receiverId) => { 
-        const response = await axios.get(`http://localhost:8080/chat/private/${receiverId}`);
+        const response = await axios.get(`http://localhost:8080/user/${receiverId}`);
         const responseData = response.data;
+        console.log(responseData)
         setReceiverData(prev => ({
             ...prev, 
             id: responseData.id,
             username: responseData.username,
             avatar: responseData.avatar,
-            status: responseData.status || "Online",
+            status: responseData.status,
             thinking: responseData.thinking,
+            lastLogin: responseData.lastLogin,
             borderColor: responseData.borderColor
         }))
         
@@ -565,17 +568,18 @@ const Chatroom = () => {
                         <div className="name-and-message">
                           {/* <span>{receivedMessages.get(otherUserId).sender.username}</span> */}
                           {console.log(otherUserId)}
-                          {receivedMessages.has(otherUserId) && <span>
+                          {receivedMessages.has(otherUserId) && <div>
+                                {console.log(Object.keys(receivedMessages.get(otherUserId))[0])}
                                 {Object.keys(receivedMessages.get(otherUserId))}
-                            </span>}
+                            </div>}
                           
                               <div className="new-message-preview">
-                                {
-                                //   privateChats.get(`${otherUserId}`)[
-                                //     privateChats.get(`${otherUserId}`).length - 1
-                                //   ].message
-                                Object.values(receivedMessages.get(otherUserId))[0].message
-                                }
+                                {/* If sender is not current user, show name */}
+                                {Object.values(receivedMessages.get(otherUserId))[0].sender.id != userData.id && <span>
+                                    {`${Object.keys(receivedMessages.get(otherUserId))}: `}
+                                </span>}
+                                
+                                <span>{Object.values(receivedMessages.get(otherUserId))[0].message}</span>
                               </div>
                             
                         </div>

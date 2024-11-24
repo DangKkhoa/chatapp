@@ -1,10 +1,14 @@
 package com.dkkhoa.chatapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor
@@ -17,6 +21,7 @@ public class User {
     private int id;
 
 //    @JsonIgnore
+
     private String email;
 
     @Column(length = 30)
@@ -31,5 +36,18 @@ public class User {
     @Column(length = 30)
     private String thinking;
     private String borderColor = "#64d3c6";
+    private LocalDateTime lastLogin;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", status='" + status + '\'' +
+                ", thinking='" + thinking + '\'' +
+                ", borderColor='" + borderColor + '\'' +
+                ", lastLogin=" + lastLogin +
+                '}';
+    }
 }

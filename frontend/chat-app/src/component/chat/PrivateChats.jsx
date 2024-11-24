@@ -5,6 +5,8 @@ import UserAvatar from "./UserAvatar";
 import Message from "./Message";
 import ChatHeader from "./ChatHeader";
 import DeletedMessage from "./DeletedMessage";
+import { calculateOfflineTime } from "../../util/timeUtils";
+
 
 const PrivateChats = ({
     id, privateChats, userData, splitIntoLines,
@@ -16,18 +18,20 @@ const PrivateChats = ({
 
     useEffect(() => {
         const isUserOnline = onlineUsers.some(user => user.id == id);
+        const timeOff = calculateOfflineTime(receiverData.lastLogin);
+        console.log(timeOff);
+        
+        setStatus(isUserOnline ? "Dang hoat dong" : `Hoat dong ${timeOff}`);
+    }, [onlineUsers])
 
-        setStatus(isUserOnline ? "Online" : "Offline");
-    })
-
-
+    
     return (
         <>
             {receiverData.id && 
                 <ChatHeader 
                     receiverName={receiverData.username}
                     receiverImg={receiverData.avatar}
-                    status={receiverData.status} 
+                    status={status} 
                     thinking={receiverData.thinking}
                     borderColor={receiverData.borderColor} />
             }

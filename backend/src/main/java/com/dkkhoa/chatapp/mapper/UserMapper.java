@@ -1,6 +1,6 @@
 package com.dkkhoa.chatapp.mapper;
 
-import com.dkkhoa.chatapp.controller.UserInfoMessageDTO;
+import com.dkkhoa.chatapp.dto.UserInfoMessageDTO;
 import com.dkkhoa.chatapp.dto.UserSessionDTO;
 import com.dkkhoa.chatapp.model.User;
 

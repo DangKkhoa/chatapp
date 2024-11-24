@@ -93,9 +93,16 @@ public class UserService {
             isUpdated = true;
         }
 
+        if(userToUpdate.getLastLogin() != null) {
+            existingUser.setLastLogin(userToUpdate.getLastLogin());
+            isUpdated = true;
+        }
+
         if(isUpdated) {
             return userRepository.save(existingUser);
         }
+
+
 
         return existingUser;
 

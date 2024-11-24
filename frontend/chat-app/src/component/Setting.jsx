@@ -15,7 +15,7 @@ const Setting = () => {
         email: "",
         username: "",
         avatar: "",
-        status: "online",
+        status: "",
         thinking: "",
         borderColor: ""
     })
@@ -39,10 +39,12 @@ const Setting = () => {
         const avatars = [
             "user_1", "user_2", "user_3",
             "user_4", "user_5", "user_6",
-            "user_7", "user_8", "user_9"
+            "user_7", "user_8", "user_9",
+            "user_10", "user_11"
         ];
 
         const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
+        console.log(randomAvatar)
         setUserData(prevUserData => ({
             ...prevUserData,
             avatar: randomAvatar
@@ -135,22 +137,7 @@ const Setting = () => {
                 onChange={handleUserDataChange}
               />
             </div>
-            <div>
-              <label htmlFor="status">
-                Status
-              </label>
-              <select
-                name="status"
-                id=""
-                onChange={handleUserDataChange}
-                value={userData.status || ""}
-              >
-                <option value="online">Online</option>
-                <option value="busy">Busy</option>
-                <option value="tired">Tired</option>
-                <option value="want_to_chat">Want to chat</option>
-              </select>
-            </div>
+            
             <div className="border-color-pickers">
                 Choose border color: 
                 <HexColorPicker color={userData.borderColor} onChange={(color) => handleBorderColorChange(color)} style={{width: "100%"}}/>

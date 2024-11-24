@@ -1,4 +1,4 @@
-package com.dkkhoa.chatapp.controller;
+package com.dkkhoa.chatapp.dto;
 
 
 import lombok.AllArgsConstructor;

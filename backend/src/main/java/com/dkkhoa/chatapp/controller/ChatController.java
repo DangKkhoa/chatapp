@@ -21,6 +21,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 @Controller
@@ -97,12 +99,12 @@ public class ChatController {
     public Set<OnlineUser> userJoin(@Payload MessageDTO messageDTO) {
         System.out.println(messageDTO);
         boolean onlineUserExist = onlineUsers.stream().anyMatch(user -> user.getId() == messageDTO.getSenderId());
-        if(!onlineUserExist) {
+        User user = userService.getUserById(messageDTO.getSenderId());
+
+        if(!onlineUserExist && user != null) {
+            user.setStatus("Online");
+            userService.updateUser(user);
             onlineUsers.add(new OnlineUser(messageDTO.getSenderId(), messageDTO.getSenderName(), messageDTO.getSenderAvatar()));
-//            simpMessagingTemplate.convertAndSend("/topic/online-users", onlineUsers);
-
-
-//            simpMessagingTemplate.convertAndSend("/chatroom/public", joinMessage);
         }
         System.out.println(onlineUsers);
         return onlineUsers;
@@ -112,6 +114,13 @@ public class ChatController {
     @SendTo("/topic/online-users")
     public Set<OnlineUser> userDisconnect(@Payload MessageDTO messageDTO) {
         onlineUsers.removeIf(user -> user.getId() == messageDTO.getSenderId());
+        User userToUpdate = userService.getUserById(messageDTO.getSenderId());
+        if(userToUpdate != null) {
+            LocalDateTime logoutTime = LocalDateTime.now();
+            userToUpdate.setLastLogin(logoutTime);
+            userToUpdate.setStatus("Offline");
+            userService.updateUser(userToUpdate);
+        }
         return onlineUsers;
     }
 

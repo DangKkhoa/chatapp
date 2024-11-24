@@ -88,13 +88,13 @@ public class UsersController {
 //        }
 //    }
 
-    @GetMapping("/chat/private/{id}")
+    @GetMapping("/user/{id}")
     @ResponseBody
     public User getReceiverInfo(@PathVariable int id) {
         System.out.println(id);
         User userToSend = userService.getUserById(id);
-        userToSend.setEmail("");
-        userToSend.setPassword("");
+//        userToSend.setEmail("");
+//        userToSend.setPassword("");
         return userToSend;
     }
 }
