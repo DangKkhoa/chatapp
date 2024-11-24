@@ -1,5 +1,5 @@
 import DeletedMessage from "./DeletedMessage";
-import "../../style/ChatPending.css"
+import "../../style/chatPending.css"
 
 const ChatAcceptPending = ({isDeleted, receiverName}) => {
     return(
