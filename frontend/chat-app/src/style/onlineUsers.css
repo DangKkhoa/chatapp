@@ -1,10 +1,16 @@
 
 .online-users-container {
     position: relative;
+    box-sizing: border-box;
     width: 100%;
     background-color: white;
+    padding: 5px 10px;
     display: flex;
     align-items: center;
+    border-radius: 10px;
+}
+
+.online-users-container.no-users {
     height: 100px;
 }
 
@@ -12,13 +18,12 @@
     width: 100%;
     text-align: center;
     color: rgb(171, 171, 171);
-
 }
 
 
 .online-users {
     display: flex;
-    gap: 15px;
+    gap: 20px;
     padding: 10px;
     overflow-x: auto;
     height:fit-content;

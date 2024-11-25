@@ -10,8 +10,8 @@ export const calculateOfflineTime = (start, now = new Date()) => {
     const days = Math.floor(hours / 24);
     console.log(`${days}:${hours}:${mins}:${secs}`)
 
-    if(days > 0) return `Hoat dong ${days} ngay truoc`;
-    if(hours > 0) return `Hoat dong${hours} tieng truoc`;
-    if(mins > 0) return `Hoat dong ${mins} phut truoc`;
-    if(secs > 0) return `Hoat dong ${secs} giay truoc` 
+    if(days > 0) return `Active ${days} ${days > 1 ? "days" : "day"} ago`;
+    if(hours > 0) return `Active ${hours} ${hours > 1 ? "hours" : "hour"} ago`;
+    if(mins > 0) return `Active ${mins} ${mins > 1 ? "minutes" : "minute"} ago`;
+    if(secs >= 0) return "Active recently"; 
 }

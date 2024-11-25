@@ -95,21 +95,35 @@ public class ChatService {
         return messageRepository.findAllByChatroom(privateChatroom);
     }
 
-    public Map<String, Map<String, Message>> getMessagesGroupedBySender(int userId) {
+    public Map<Integer, Map<String, Message>> getMessagesGroupedBySender(int userId) {
         List<Chatroom> chatrooms = chatRepository.findAllByUserId(userId);
 
 //        List<Message> messages = messageRepository.findAllMessagesSentToUser(userId);
-        Map<String, Message> usersInChatroom = new HashMap<>();
-        Map<String, Map<String, Message>> messagesOfUsersInChatroom = new HashMap<>();
+        //Map<String, Message> usersInChatroom = new HashMap<>();
+        Map<Integer, Map<String, Message>> messagesOfUsersInChatroom = new HashMap<>();
         for(Chatroom chatroom : chatrooms) {
+            System.out.println("Line 105");
+            System.out.println(chatroom);
             List<Message> messagesByChatroom = messageRepository.findAllByChatroom(chatroom);
             Message lastMessage = messagesByChatroom.get(messagesByChatroom.size() - 1);
             int otherUserId = chatroom.getUser1() == userId ? chatroom.getUser2() : chatroom.getUser1();
             User otherUserData = userRepository.findById(otherUserId);
             // List<Message> messages = messageRepository.findAllBySenderIdAndReceiverId(otherUserId, userId);
             if(otherUserData != null) {
+//                usersInChatroom.put(otherUserData.getUsername(), lastMessage);
+//                messagesOfUsersInChatroom.put(otherUserId, usersInChatroom);
+
+                if (!messagesOfUsersInChatroom.containsKey(otherUserId)) {
+                    // If not, initialize a new map for this user
+                    messagesOfUsersInChatroom.put(otherUserId, new HashMap<>());
+                }
+
+                // Get the map of users for this otherUserId (username -> lastMessage)
+                Map<String, Message> usersInChatroom = messagesOfUsersInChatroom.get(otherUserId);
+
+                // Add the username and last message to the map
                 usersInChatroom.put(otherUserData.getUsername(), lastMessage);
-                messagesOfUsersInChatroom.put(Integer.toString(otherUserData.getId()), usersInChatroom);
+                System.out.println(messagesOfUsersInChatroom.toString());
             };
         }
 

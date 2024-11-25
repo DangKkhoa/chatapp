@@ -1,11 +1,11 @@
 import { memo } from "react";
 import UserAvatar from "./UserAvatar";
-// import "../../style/onlineUsers.css";
+import "../../style/onlineUsers.css";
 
 const OnlineUsers = ({ onlineUsers, userData, handleClick }) => {
     
     return(
-        <div className="online-users-container">
+        <div className={`online-users-container ${onlineUsers.length <= 1 && "no-users"} `}>
             {console.log(onlineUsers)}
             {onlineUsers.length <= 1 && <div className="no-user-online">Nobody is online yet</div>}
             {onlineUsers.length > 1 && <div className="online-users">
@@ -20,7 +20,9 @@ const OnlineUsers = ({ onlineUsers, userData, handleClick }) => {
                         {/* <span>Online</span> */}
                         <span>{user.username}</span>
                     </div>
+                    
                 ))}
+                
             </div>}
         </div>
         

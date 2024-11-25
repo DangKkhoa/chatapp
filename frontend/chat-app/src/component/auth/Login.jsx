@@ -65,8 +65,8 @@ const Login = () => {
     return(
         <div className="container login" >
             <div id="logo" className="login-logo">
-                <h1 className="title">QuickChat</h1>
-                <p className="sub-title">Connect and send messages to everyone with superior speed <span style={{color: "#f5c938"}}><i className="fa-solid fa-bolt"></i></span></p>
+                <h1 className="title">Anonify <i class="fa-solid fa-user-secret" style={{color: "black", fontSize: "1.5rem"}}></i></h1>
+                <p className="sub-title">Anonymous Conversations, Real Connections </p>
             </div>
             <form id="login-form" action="">
                 <div className="form-group">

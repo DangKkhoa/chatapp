@@ -220,7 +220,7 @@ public class ChatController {
 
     @PostMapping("/chat/private/incoming-message")
     @ResponseBody
-    public Map<String, Map<String, Message>> sendPrivateMessages(@RequestBody int userId) {
+    public Map<Integer, Map<String, Message>> sendPrivateMessages(@RequestBody int userId) {
         System.out.println(userId);
         return chatService.getMessagesGroupedBySender(userId);
     }

@@ -27,13 +27,12 @@ ul {
     padding: 0;
 }
 
-.online-users-container {
+/* .online-users-container {
     position: relative;
     width: 100%;
     background-color: white;
     display: flex;
     align-items: center;
-    height: 100px;
 }
 
 .no-user-online {
@@ -84,7 +83,7 @@ ul {
     left: 40px;
     bottom: 15px;
     border-radius: 50%;
-}
+} */
 
 
 

@@ -80,17 +80,17 @@ const Chatroom = () => {
         
     }, [userData.id])
 
-    useEffect(() => {
-        axios.get("http://localhost:8080/get-online-users", {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        })
-        .then(response => {
-            console.log(response.data);
-            setOnlineUsers(response.data);
-        })
-    }, [])
+    // useEffect(() => {
+    //     axios.get("http://localhost:8080/get-online-users", {
+    //         headers: {
+    //             "Authorization": `Bearer ${token}`
+    //         }
+    //     })
+    //     .then(response => {
+    //         console.log(response.data);
+    //         setOnlineUsers(response.data);
+    //     })
+    // }, [])
 
     useEffect(() => {
         messageEndRef.current?.lastElementChild?.scrollIntoView({ behavior: "smooth" }); // Auto-scroll to the bottom
@@ -318,9 +318,8 @@ const Chatroom = () => {
 
     const onUsersJoinReceived = (payload) => {
         let payloadData = JSON.parse(payload.body);
-        setTimeout(() => {
-            setOnlineUsers(payloadData);
-        }, 1000)
+        
+        setOnlineUsers(payloadData);
     }
 
     
@@ -571,7 +570,7 @@ const Chatroom = () => {
                       {/* {console.log(publicChats)} */}
                     </div>
                   </li>
-
+                  {console.log(receivedMessages)}
                   {[...receivedMessages.keys()]
                     .filter((otherUserId) => otherUserId != userData.id)
                     .map((otherUserId, index = index + 1) => (
@@ -585,19 +584,34 @@ const Chatroom = () => {
                         <div className="name-and-message">
                           {/* <span>{receivedMessages.get(otherUserId).sender.username}</span> */}
                           {console.log(otherUserId)}
-                          {receivedMessages.has(otherUserId) && <div>
-                                {console.log(Object.keys(receivedMessages.get(otherUserId))[0])}
+                          {Object.keys(receivedMessages.get(otherUserId)).map((name, id) => (
+                            <>
+                                <div>
+                                    {console.log(name)}
+                                    {name}
+                                </div>
+                                <div className="new-message-preview">
+                                    {Object.values(receivedMessages.get(otherUserId))[id].sender.id != userData.id && <span>
+                                        {`${Object.keys(receivedMessages.get(otherUserId))}: `}
+                                    </span>}
+                                    
+                                    <span>{Object.values(receivedMessages.get(otherUserId))[id].message}</span>
+                                </div>
+                            </>
+                          ))}
+                          {/* {receivedMessages.has(otherUserId) && <div>
+                                {console.log((receivedMessages.get(otherUserId)))}
                                 {Object.keys(receivedMessages.get(otherUserId))}
-                            </div>}
+                            </div>} */}
                           
-                              <div className="new-message-preview">
-                                {/* If sender is not current user, show name */}
+                              {/* <div className="new-message-preview">
+                                {console.log()}
                                 {Object.values(receivedMessages.get(otherUserId))[0].sender.id != userData.id && <span>
                                     {`${Object.keys(receivedMessages.get(otherUserId))}: `}
                                 </span>}
                                 
                                 <span>{Object.values(receivedMessages.get(otherUserId))[0].message}</span>
-                              </div>
+                              </div> */}
                             
                         </div>
 
