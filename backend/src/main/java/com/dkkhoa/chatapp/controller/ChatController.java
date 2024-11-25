@@ -94,6 +94,7 @@ public class ChatController {
         }
     }
 
+
     @MessageMapping("/join/public")
     @SendTo("/topic/online-users")
     public Set<OnlineUser> userJoin(@Payload MessageDTO messageDTO) {
@@ -110,6 +111,14 @@ public class ChatController {
         return onlineUsers;
     }
 
+    @GetMapping("/get-online-users")
+    @ResponseBody
+    public Set<OnlineUser> getOnlineUsers() {
+        System.out.println();
+        System.out.println(onlineUsers);
+        return onlineUsers;
+    }
+
     @MessageMapping("/disconnect/public")
     @SendTo("/topic/online-users")
     public Set<OnlineUser> userDisconnect(@Payload MessageDTO messageDTO) {
@@ -120,8 +129,11 @@ public class ChatController {
             userToUpdate.setLastLogin(logoutTime);
             userToUpdate.setStatus("Offline");
             userService.updateUser(userToUpdate);
+            simpMessagingTemplate.convertAndSend("/topic/update", userToUpdate);
+
         }
         return onlineUsers;
+
     }
 
     @MessageMapping("/join/private")

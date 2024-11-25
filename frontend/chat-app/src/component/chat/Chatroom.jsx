@@ -48,10 +48,6 @@ const Chatroom = () => {
 
     })
 
-    useEffect(() => {
-        document.title = "Quickchat";
-    }, [])
-
     const stompClient = useRef(null);
     
     useEffect(() => {
@@ -75,14 +71,32 @@ const Chatroom = () => {
     
     useEffect(() => {
         if(userData.id) {
+            document.title = "Ano Chat"
             register();
+            
         }
+
+        
         
     }, [userData.id])
 
     useEffect(() => {
+        axios.get("http://localhost:8080/get-online-users", {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            console.log(response.data);
+            setOnlineUsers(response.data);
+        })
+    }, [])
+
+    useEffect(() => {
         messageEndRef.current?.lastElementChild?.scrollIntoView({ behavior: "smooth" }); // Auto-scroll to the bottom
     }, [publicChats, privateChats]);
+
+    
 
     const fetchPublicChatHistory = async (token, type) => {
 
@@ -256,6 +270,7 @@ const Chatroom = () => {
                 avatar: updatedUserData.avatar,
                 status: updatedUserData.status,
                 thinking: updatedUserData.thinking,
+                lastLogin: updatedUserData.lastLogin,
                 borderColor: updatedUserData.borderColor
             }))
         }
@@ -300,12 +315,15 @@ const Chatroom = () => {
 
     }
 
+
     const onUsersJoinReceived = (payload) => {
         let payloadData = JSON.parse(payload.body);
-        // console.log(payloadData);
-        setOnlineUsers(payloadData);
-        
+        setTimeout(() => {
+            setOnlineUsers(payloadData);
+        }, 1000)
     }
+
+    
 
     const onError = (err) => {
         console.error(err);
@@ -316,9 +334,7 @@ const Chatroom = () => {
         console.log(payload.body);
         const idToDelete = payload.body
         fetchSenderMessages(userData.id, token);
-        // privateChats.set(idToDelete, []);
-        // privateChats.set(`${userData.id}`, []);
-        // privateChats.clear();
+        
         setPrivateChats(prevMap => {
             const newMap = new Map(prevMap);
             newMap.set(`${idToDelete}`, []);
@@ -501,6 +517,7 @@ const Chatroom = () => {
             stompClient.current.disconnect(() => {
                 console.log(`User ${userData.username} disconnected`);
             });
+            
             navigate("/auth/login");
         }
         

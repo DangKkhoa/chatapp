@@ -1,9 +1,6 @@
-import user_1 from "../../assets/user_1.jpg";
-
-
 const UserAvatar = ({ avatar, borderColor }) => {
     const avatarStyle = {
-        backgroundImage: `url(/src/assets/user_12.png)`,
+        backgroundImage: `url(/src/assets/avatars/${avatar}.png)`,
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",

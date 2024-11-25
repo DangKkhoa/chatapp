@@ -14,15 +14,21 @@ const PrivateChats = ({
     receiverData, accepted, deletedMessage,
     isDeleted, setUserData }) => {
 
-    const [status, setStatus] = useState();
+    const [status, setStatus] = useState("");
 
     useEffect(() => {
+        if(receiverData.lastLogin) {
+            
+        }
+
         const isUserOnline = onlineUsers.some(user => user.id == id);
-        const timeOff = calculateOfflineTime(receiverData.lastLogin);
-        console.log(timeOff);
+
+        const offlineMessage = calculateOfflineTime(receiverData.lastLogin);
+        console.log(offlineMessage)
+            
+        setStatus(isUserOnline ? "Dang hoat dong" : offlineMessage ?? "Dang hoat dong");
         
-        setStatus(isUserOnline ? "Dang hoat dong" : `Hoat dong ${timeOff}`);
-    }, [onlineUsers])
+    }, [onlineUsers, receiverData])
 
     
     return (

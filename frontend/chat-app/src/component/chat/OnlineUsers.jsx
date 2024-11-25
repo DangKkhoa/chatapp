@@ -27,4 +27,4 @@ const OnlineUsers = ({ onlineUsers, userData, handleClick }) => {
     );
 }
 
-export default memo(OnlineUsers);
+export default OnlineUsers;
