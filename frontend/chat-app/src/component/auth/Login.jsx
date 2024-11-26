@@ -75,7 +75,7 @@ const Login = () => {
                         name="email" 
                         className="form-input"
                         id="email"
-                        placeholder="Enter your email address"
+                        placeholder="Email address"
                         value={userData.email}
                         onChange={handleValueChange}/>
                 </div>
@@ -86,7 +86,7 @@ const Login = () => {
                         name="password" 
                         className="form-input"
                         id="password"
-                        placeholder="Enter your password"
+                        placeholder="Password"
                         value={userData.password}
                         onChange={handleValueChange}
                         
@@ -108,7 +108,7 @@ const Login = () => {
                     Remember Login
                 </div>
                 <Button type="login" userData={userData} isRememberLoginChecked={isChecked}/>
-                <a href="/forgot-password" className="reset-password-link">Forgot password ?</a>
+                <a href="/forget-password" className="reset-password-link">Forgot password ?</a>
                 <hr/>
                 <a href="/auth/register" id="register-btn" className="btn register-btn">Create new account</a>
             </form>

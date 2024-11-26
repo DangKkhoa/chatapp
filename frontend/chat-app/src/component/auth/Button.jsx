@@ -14,7 +14,7 @@ const Button = (props) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        
+        setIsClicked(true);
         try {
             const response = await axios.post(`http://localhost:8080/auth/${props.type}`, props.userData);
             const responseData = response.data;
@@ -24,6 +24,7 @@ const Button = (props) => {
                 console.log(responseData);
                 setError(responseData.message);
                 setIsFailed(true);
+                setIsClicked(false);
             }
             else {
                 if(props.type == "login") {
@@ -41,7 +42,7 @@ const Button = (props) => {
                     setIsClicked(true);
                     setIsFailed(false);
                     props.setIsSuccess(true);
-                    //navigate("/auth/login", { replace: true });
+                    navigate("/auth/login", { replace: true });
                 }
                 
             }
@@ -58,7 +59,7 @@ const Button = (props) => {
     return(
         <>
             {isFailed && <ErrorBox message={error}/>}
-            <button type="submit" className={`btn ${props.type === "login" ? "submit-btn" : "register-btn"}`} onClick={handleSubmit}>
+            <button type="submit" className={`btn ${props.type === "login" ? "submit-btn" : "register-btn"} ${isClicked && "clicked"}`} onClick={handleSubmit}>
                 {!isClicked && (props.type == "login" ? "Login" : "Register")}
                 {isClicked && (props.type == "login" ? "Logging in..." : "Redirecting...")}
             </button>

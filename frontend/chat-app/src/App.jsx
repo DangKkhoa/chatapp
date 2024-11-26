@@ -12,6 +12,7 @@ import {
 } from "react-router-dom";
 import PrivateChats from "./component/chat/PrivateChats";
 import Setting from "./component/Setting";
+import ForgetPassword from "./component/auth/ForgetPassword";
 
 const ProtectedChatroom = () => {
   const { type, id } = useParams();
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
   {
     path: "/setting",
     element: <Setting />
+  },
+  {
+    path: "/forget-password",
+    element: <ForgetPassword />
   }
 
 ]);

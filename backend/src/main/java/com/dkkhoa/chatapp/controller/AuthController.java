@@ -1,11 +1,10 @@
 package com.dkkhoa.chatapp.controller;
 
 
-import com.dkkhoa.chatapp.dto.CustomResponse;
-import com.dkkhoa.chatapp.dto.UserSessionDTO;
+import com.dkkhoa.chatapp.dto.*;
 import com.dkkhoa.chatapp.mapper.UserMapper;
 import com.dkkhoa.chatapp.model.User;
-import com.dkkhoa.chatapp.dto.UserRegistrationDTO;
+import com.dkkhoa.chatapp.service.SendEmailService;
 import com.dkkhoa.chatapp.service.UserService;
 import com.dkkhoa.chatapp.utils.EmailChecker;
 import com.dkkhoa.chatapp.utils.JwtUtil;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailAuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +30,8 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private SendEmailService sendEmailService;
 
 
     @PostMapping("/register")
@@ -62,13 +64,21 @@ public class AuthController {
             newUser.setUsername(user.getUsername());
             newUser.setPassword(user.getPassword());
 
+            sendEmailService.senndEmail(
+                    newUser.getEmail(),
+                    "Welcome to Anonify!",
+                    "Hello " + newUser.getUsername() + ",\n\nThank you for registering with Anonify. We're glad to have you!"
+            );
+
             User userToBeSaved = userService.registerUser(newUser);
             if(userToBeSaved == null) {
                 return new CustomResponse(5, "Something went wrong");
             }
+
             return new CustomResponse(1, "User registration successful");
-        }
-        catch(RuntimeException error) {
+        } catch(MailAuthenticationException mailAuthenticationException) {
+            return new CustomResponse(5, "Something went wrong with the email address");
+        } catch(RuntimeException error) {
             System.out.println(error.getMessage());
             return new CustomResponse(5, error.getMessage());
         }
@@ -76,19 +86,13 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseBody
-    public CustomResponse login(@RequestBody User user) {
-        System.out.println(user);
+    public CustomResponse login(@RequestBody UserLoginDTO userLoginDTO) {
+        System.out.println(userLoginDTO);
 
-        User userFound = userService.getUser(user);
+        User userFound = userService.getUser(userLoginDTO);
 
         if(userFound != null) {
-//            session.setAttribute("user",
-//                    new UserSessionDTO(userFound.getId(),
-//                            userFound.getEmail(),
-//                            userFound.getUsername(),
-//                            userFound.getAvatarUrl()
-//                    )
-//            );
+
             JwtUtil jwtUtil = new JwtUtil();
             String token = jwtUtil.generateToken(userFound);
 
@@ -130,20 +134,39 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/login")
-//    @ResponseBody
-    public String loginPage(HttpSession session) {
-        if(session.getAttribute("user") != null) {
-            return "redirect:/";
+    @PostMapping("/forget-password")
+    @ResponseBody
+    public CustomResponse forgetPassword(@RequestBody ForgetPasswordDTO forgetPasswordDTO) {
+        try {
+            User userToUpdate = userService.getUserByEmail(forgetPasswordDTO.getEmail());
+            if(userToUpdate == null) {
+                return new CustomResponse(5, "User not found!");
+            }
+
+            if(!forgetPasswordDTO.getPassword().equals(forgetPasswordDTO.getConfirmPassword())) {
+                return new CustomResponse(6, "Passwords do not match!");
+            }
+
+            if(forgetPasswordDTO.getPassword().length() < 8) {
+                return new CustomResponse(7, "Password must be at least 8 characters!");
+            }
+            userService.updateUser(userToUpdate);
+            sendEmailService.senndEmail(
+                    forgetPasswordDTO.getEmail(),
+                    "Password changed",
+                    "Your password has been changed!");
+            return new CustomResponse(1, "Password changed successfully");
         }
-        return "login";
+        catch(MailAuthenticationException e) {
+            System.out.println(e);
+            return new CustomResponse(3, "Something went wrong with the email address.");
+        }
+        catch (RuntimeException e) {
+            System.out.println(e);
+            return new CustomResponse(3, "Cannot change password at the moment. Try again later.");
+        }
     }
 
-    @GetMapping("/register")
-//    @ResponseBody
-    public String registerPage(HttpSession session, HttpServletRequest request) {
-        return "register";
-    }
 
 
 }

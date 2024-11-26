@@ -49,32 +49,32 @@ const Register = () => {
         }
     }
 
-    useEffect(() => {
-        let time = 3;
-        if(isSuccess) {
-            let intervalId = setInterval(() => {
-                time--;
-                setRedirectingTime(prev => prev - 1);
-                if(time == 0) {
-                    clearInterval(intervalId);
-                    navigate("/auth/login");
-                }
-            }, 1000);
-        }
+    // useEffect(() => {
+    //     let time = 3;
+    //     if(isSuccess) {
+    //         let intervalId = setInterval(() => {
+    //             time--;
+    //             setRedirectingTime(prev => prev - 1);
+    //             if(time == 0) {
+    //                 clearInterval(intervalId);
+    //                 navigate("/auth/login");
+    //             }
+    //         }, 1000);
+    //     }
         
-    }, [isSuccess])
+    // }, [isSuccess])
 
     
     return(
         <div className="container register" >
             
             <div id="logo" className="register-logo">
-                <h1 className="title">Quickchat</h1>
+                <h1 className="title">Anonify</h1>
             </div>
-            {isSuccess && <div className="register-success">
+            {/* {isSuccess && <div className="register-success">
                 User register successfully.
                 Redirecting in <span style={{color: "red"}}>{redirectingTime}</span>
-            </div>}
+            </div>} */}
             <form id="register-form">
                 <h1>Create a new account</h1>
                 <div className="form-group">
@@ -108,7 +108,7 @@ const Register = () => {
                         name="password" 
                         className="form-input" 
                         id="password"
-                        placeholder="Confirm your password"
+                        placeholder="Enter your password"
                         value={userData.password}
                         onChange={handleValueChange}/>
                     {/* <ToggleViewPassword 
@@ -124,7 +124,7 @@ const Register = () => {
                         name="confirmedPassword" 
                         className="form-input" 
                         id="confirm-password"
-                        placeholder="Enter your password"
+                        placeholder="Confirm your password"
                         value={userData.confirmedPassword}
                         onChange={handleValueChange}/>
                     {/* <ToggleViewPassword 

@@ -1,5 +1,6 @@
 package com.dkkhoa.chatapp.service;
 
+import com.dkkhoa.chatapp.dto.UserLoginDTO;
 import com.dkkhoa.chatapp.model.User;
 import com.dkkhoa.chatapp.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +36,9 @@ public class UserService {
         return savedUser;
     }
 
-    public User getUser(User user) {
-        User userFound = userRepository.findByEmail(user.getEmail());
-        if(userFound != null && userFound.getPassword().equals(user.getPassword())) {
+    public User getUser(UserLoginDTO userLoginDTO) {
+        User userFound = userRepository.findByEmail(userLoginDTO.getEmail());
+        if(userFound != null && userFound.getPassword().equals(userLoginDTO.getPassword())) {
             return userFound;
         }
 
