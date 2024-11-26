@@ -37,6 +37,7 @@ public class User {
     private String thinking;
     private String borderColor = "#64d3c6";
     private LocalDateTime lastLogin;
+    private int code;
 
     @Override
     public String toString() {

@@ -142,10 +142,9 @@ public class ChatController {
         System.out.println(messageDTO);
 
         Message message = messageMapper.toEntity(messageDTO);
-         ChatStatusResponse chatroomAvailability = chatService.isAcceptedByReceiver(message);
-//         System.out.println("Chatroom available: " + chatroomAvailable);
+        ChatStatusResponse chatroomAvailability = chatService.isAcceptedByReceiver(message);
         simpMessagingTemplate.convertAndSendToUser(Integer.toString(messageDTO.getSenderId()), "/chat-availability", chatroomAvailability.isAvailable());
-        //chatService.isAcceptedByReceiver(message.getSenderId(), message.getReceiverId());
+
 
     }
 
@@ -158,38 +157,22 @@ public class ChatController {
         Message message = messageMapper.toEntity(messageDTO);
 
 
-//        System.out.println(message.getSenderId());
 
         if(chatService.storePrivateMessage(message) != null) {
             System.out.println("119");
-            // boolean chatAvailable = chatService.isAcceptedByReceiver(message.getSenderId(), message.getReceiverId());
             simpMessagingTemplate.convertAndSendToUser(messageDTO.getReceiverId(), "/private", message);
-            //simpMessagingTemplate.convertAndSendToUser(messageDTO.getReceiverId(), "/chat-availability", chatAvailable);
             ChatStatusResponse chatroomAvailability = chatService.isAcceptedByReceiver(message);
             System.out.println("Code: " + chatroomAvailability.getCode());
-            if(chatroomAvailability.getCode() == 1 || chatroomAvailability.getCode() == 3) {
-                    simpMessagingTemplate.convertAndSendToUser(Integer.toString(message.getSender().getId()), "/chat-availability", chatroomAvailability.isAvailable());
-            }
-            else {
+            if (chatroomAvailability.getCode() == 1 || chatroomAvailability.getCode() == 3) {
+                simpMessagingTemplate.convertAndSendToUser(Integer.toString(message.getSender().getId()), "/chat-availability", chatroomAvailability.isAvailable());
+            } else {
                 simpMessagingTemplate.convertAndSendToUser(Integer.toString(message.getReceiver().getId()), "/chat-availability", chatroomAvailability.isAvailable());
 
             }
 
 
-            return ;
+            return;
         }
-
-//        Message systemMessage = new Message();
-//        // If invitation is not accepted, SYSTEM send message back to user
-//        systemMessage.setSenderName("System");
-//        systemMessage.setSenderId(0);
-//        systemMessage.setMessageId(0);
-//        systemMessage.setMessage("Wait for user to accept your message.");
-//        systemMessage.setReceiverId(message.getSenderId());
-//        systemMessage.setReceiverName(message.getSenderName());
-//        simpMessagingTemplate.convertAndSendToUser(Integer.toString(systemMessage.getReceiverId()), "/private", systemMessage);
-
-        //return systemMessage;
     }
 
     @GetMapping("/chat/private/history")

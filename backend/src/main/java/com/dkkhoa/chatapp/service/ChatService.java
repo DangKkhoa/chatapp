@@ -110,8 +110,6 @@ public class ChatService {
             User otherUserData = userRepository.findById(otherUserId);
             // List<Message> messages = messageRepository.findAllBySenderIdAndReceiverId(otherUserId, userId);
             if(otherUserData != null) {
-//                usersInChatroom.put(otherUserData.getUsername(), lastMessage);
-//                messagesOfUsersInChatroom.put(otherUserId, usersInChatroom);
 
                 if (!messagesOfUsersInChatroom.containsKey(otherUserId)) {
                     // If not, initialize a new map for this user

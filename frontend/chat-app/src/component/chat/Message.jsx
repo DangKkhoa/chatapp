@@ -10,7 +10,7 @@ const Message = ({ chat, userData, splitIntoLines }) => {
 
     return (
         <div className="message">
-
+            {console.log(chat.sender.id)}
             {chat && <div className={`${chat.sender.id != userData.id ? "guest" : "self"}`}>
                 {chat.sender.id != userData.id && <div className={`avatar guest`}>
                     <UserAvatar avatar={chat.sender.avatar} />

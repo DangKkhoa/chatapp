@@ -4,6 +4,7 @@ import "../style/setting.css"
 import UserAvatar from "./chat/UserAvatar";
 import { verifyToken } from "../js/verifyToken";
 import { HexColorPicker } from "react-colorful";
+import { useNavigate } from "react-router-dom";
 
 const Setting = () => {
     const token = localStorage.getItem("jwtToken") || sessionStorage.getItem("jwtToken");
@@ -21,7 +22,7 @@ const Setting = () => {
     })
 
     
-
+    const navigate = useNavigate();
     
     useEffect(() => {
         verifyToken(token, setUserData)
@@ -99,7 +100,7 @@ const Setting = () => {
           <button onClick={onCloseButtonClick} className={`${isSuccess ? "success" : "failed"}`}>Ok</button>
         </div>}
         <div>
-          <button className="go-back">Go back</button>
+          <button className="go-back" onClick={() => navigate("/chat")} style={{padding: "10px 5px"}}>Go back</button>
         </div>
         <div className="setting-user-data">
           <div className="setting-avatar-container" onClick={changeAvatar}>

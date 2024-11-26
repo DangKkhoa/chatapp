@@ -99,6 +99,16 @@ public class UserService {
             isUpdated = true;
         }
 
+        if(userToUpdate.getCode() >= 0) {
+            existingUser.setLastLogin(userToUpdate.getLastLogin());
+            isUpdated = true;
+        }
+
+        if(userToUpdate.getPassword() != null && !userToUpdate.getPassword().equals(existingUser.getPassword())) {
+            existingUser.setPassword(userToUpdate.getPassword());
+            isUpdated = true;
+        }
+
         if(isUpdated) {
             return userRepository.save(existingUser);
         }

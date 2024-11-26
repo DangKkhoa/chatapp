@@ -14,7 +14,7 @@ const PublicChat = ({ publicChats, messageEndRef,
             <ChatHeader 
                 receiverName="Chatroom" 
                 status="Online" 
-                receiverImg="Quickchat"/>
+                receiverImg="Anonify"/>
 
             <div className="chat-messages" ref={messageEndRef}>
                 {/* {console.log(publicChats)} */}

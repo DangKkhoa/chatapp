@@ -20,6 +20,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 @Controller
 @RequestMapping("/auth")
@@ -33,6 +36,21 @@ public class AuthController {
     @Autowired
     private SendEmailService sendEmailService;
 
+    private String hashPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error hashing password", e);
+        }
+    }
 
     @PostMapping("/register")
     @ResponseBody
@@ -59,10 +77,11 @@ public class AuthController {
             }
 
 
+
             User newUser = new User();
             newUser.setEmail(user.getEmail());
             newUser.setUsername(user.getUsername());
-            newUser.setPassword(user.getPassword());
+            newUser.setPassword(hashPassword(user.getPassword()));
 
             sendEmailService.senndEmail(
                     newUser.getEmail(),
@@ -88,7 +107,8 @@ public class AuthController {
     @ResponseBody
     public CustomResponse login(@RequestBody UserLoginDTO userLoginDTO) {
         System.out.println(userLoginDTO);
-
+        String hashPassword = hashPassword(userLoginDTO.getPassword());
+        userLoginDTO.setPassword(hashPassword);
         User userFound = userService.getUser(userLoginDTO);
 
         if(userFound != null) {
@@ -134,11 +154,33 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/forget-password/send-code")
+    @ResponseBody
+    public CustomResponse sendCode(@RequestBody SendCodeDTO sendCodeDTO) {
+        User userToUpdate = userService.getUserByEmail(sendCodeDTO.getEmail());
+        Random rand = new Random();
+        int code = rand.nextInt(100000, 999999);
+        userToUpdate.setCode(code);
+        userService.updateUser(userToUpdate);
+        sendEmailService.senndEmail(
+                sendCodeDTO.getEmail(),
+                "Change password request",
+                "You have requested to change password.\n\nThis is your code: " + code);
+        return new CustomResponse(1, "Password changed successfully");
+    }
+
+
     @PostMapping("/forget-password")
     @ResponseBody
     public CustomResponse forgetPassword(@RequestBody ForgetPasswordDTO forgetPasswordDTO) {
         try {
             User userToUpdate = userService.getUserByEmail(forgetPasswordDTO.getEmail());
+            if(userToUpdate.getCode() == 0) {
+                return new CustomResponse(10, "Please provide code sent to your email address");
+            }
+            if(forgetPasswordDTO.getCode() != userToUpdate.getCode()) {
+                return new CustomResponse(10, "Invalid code.");
+            }
             if(userToUpdate == null) {
                 return new CustomResponse(5, "User not found!");
             }
@@ -150,11 +192,15 @@ public class AuthController {
             if(forgetPasswordDTO.getPassword().length() < 8) {
                 return new CustomResponse(7, "Password must be at least 8 characters!");
             }
+
+            String hashPassword = hashPassword(forgetPasswordDTO.getPassword());
+            userToUpdate.setPassword(hashPassword);
+
             userService.updateUser(userToUpdate);
             sendEmailService.senndEmail(
                     forgetPasswordDTO.getEmail(),
-                    "Password changed",
-                    "Your password has been changed!");
+                    "Password changed!",
+                    "Your password has been changed.");
             return new CustomResponse(1, "Password changed successfully");
         }
         catch(MailAuthenticationException e) {
@@ -166,6 +212,26 @@ public class AuthController {
             return new CustomResponse(3, "Cannot change password at the moment. Try again later.");
         }
     }
+
+    @PostMapping("/verify-code")
+    @ResponseBody
+    public CustomResponse verifyCode(@RequestBody SendCodeDTO sendCodeDTO) {
+        User user = userService.getUserByEmail(sendCodeDTO.getEmail());
+        if(user == null) {
+            return new CustomResponse(5, "User not found!");
+        }
+        int userCode = user.getCode();
+        System.out.println("user code: " + userCode + ", send code: " + sendCodeDTO.getCode());
+        if(userCode != sendCodeDTO.getCode()) {
+            return new CustomResponse(6, "Incorrect code! Please try again.");
+        }
+
+//        user.setCode(0);
+//        userService.updateUser(user);
+        return new CustomResponse(1, "Code verified.");
+    }
+
+
 
 
 

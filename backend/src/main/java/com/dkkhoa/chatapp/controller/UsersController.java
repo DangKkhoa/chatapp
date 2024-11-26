@@ -16,78 +16,42 @@ import org.springframework.web.bind.annotation.*;
 public class UsersController {
     @Autowired
     public UserService userService;
-
-
-    @PostMapping("/users")
-    public String checkJwt(HttpServletRequest request) {
-        System.out.println("Line 14");
-
-        String authHeader = request.getHeader("Authorization");
-        System.out.println(authHeader);
-        if(authHeader == null || !authHeader.startsWith("Bearer")) {
-            return "redirect:/auth/login";
-        }
-        System.out.println("Line 19");
-
-        String token = authHeader.substring(7);
-        try {
-            JwtUtil jwtUtil = new JwtUtil();
-            String email = jwtUtil.extractEmail(token);
-            if(email == null || jwtUtil.isTokenExpired(token)) {
-                return "redirect:/auth/login";
-            }
-            System.out.println("Line 27");
-            return "index";
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return "redirect:/auth/login";
-        }
-    }
-
-    @GetMapping("/users")
-    public String usersPage() {
-        return "users";
-    }
-
-//    @PostMapping("/user/update")
-//    @ResponseBody
-//    public CustomResponse updateUser(HttpServletRequest request, @RequestBody UserSessionDTO userRequestUpdate) {
-//        System.out.println("64 in UserController");
-//        System.out.println(userRequestUpdate);
-//        try {
-//            String authHeader = request.getHeader("Authorization");
-//            System.out.println(authHeader);
-//            if(authHeader == null || !authHeader.startsWith("Bearer")) {
-//                return new CustomResponse(0, "Unauthorized");
-//            }
 //
-//            String token = authHeader.substring(7);
+//
+//    @PostMapping("/users")
+//    public String checkJwt(HttpServletRequest request) {
+//        System.out.println("Line 14");
+//
+//        String authHeader = request.getHeader("Authorization");
+//        System.out.println(authHeader);
+//        if(authHeader == null || !authHeader.startsWith("Bearer")) {
+//            return "redirect:/auth/login";
+//        }
+//        System.out.println("Line 19");
+//
+//        String token = authHeader.substring(7);
+//        try {
 //            JwtUtil jwtUtil = new JwtUtil();
 //            String email = jwtUtil.extractEmail(token);
 //            if(email == null || jwtUtil.isTokenExpired(token)) {
-//                return new CustomResponse(0, "Token is invalid or expired");
+//                return "redirect:/auth/login";
 //            }
-//            User user = userService.getUserByEmail(email);
-//            if(user.getId() != userRequestUpdate.getId()) {
-//                return new CustomResponse(0, "User does not exist");
-//            }
-//            userRequestUpdate.setEmail(email);
-//            User userToUpdate = UserMapper.toEntity(userRequestUpdate);
-//
-//            if(userService.updateUser(userToUpdate) != null) {
-//                return new CustomResponse(1, "User updated successfully", userRequestUpdate);
-//            }
-//
-//            return new CustomResponse(0, "User not found");
-//
+//            System.out.println("Line 27");
+//            return "index";
 //        }
 //        catch (Exception e) {
 //            e.printStackTrace();
-//            return new CustomResponse(0, "Something went wrong. Please try again later");
+//            return "redirect:/auth/login";
 //        }
 //    }
-
+//
+//    @GetMapping("/users")
+//    public String usersPage() {
+//        return "users";
+//    }
+//
+//
+//
     @GetMapping("/user/{id}")
     @ResponseBody
     public User getReceiverInfo(@PathVariable int id) {

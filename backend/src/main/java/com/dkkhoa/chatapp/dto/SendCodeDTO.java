@@ -5,12 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-
-public class ForgetPasswordDTO {
+@AllArgsConstructor
+public class SendCodeDTO {
     private String email;
-    private String password;
-    private String confirmPassword;
     private int code;
 }

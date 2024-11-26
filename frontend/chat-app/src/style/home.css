@@ -1,12 +1,13 @@
 * {
     font-size: 1.5rem;
+    box-sizing: border-box;
 }
 body {
     margin: 0;
     padding: 0;
     /* background-color: black; */
     font-family: 'DM Sans', sans-serif;
-    /* box-sizing: border-box; */
+    box-sizing: border-box;
 }
 
 .container.home {
@@ -94,7 +95,7 @@ ul {
     width: 100%;
     height: calc(100% - 100px);
     /* flex: 1; */
-    
+    box-sizing: border-box;
     display: flex;
     /* padding: 5px; */
     border-radius: 10px;
@@ -241,6 +242,7 @@ ul {
     padding: 10px;
     border-radius: 10px;
     box-shadow: -1px -1px 5px rgb(220, 220, 220);
+    box-sizing: border-box;
 }
 
 .chat-header {
@@ -297,7 +299,8 @@ ul {
     padding: 10px;
     /* border: 1px solid rgb(65, 65, 65); */
     font-size: 1.2rem;
-    margin: 10px 0;
+    /* margin: 10px 0; */
+    
 }
 
 
